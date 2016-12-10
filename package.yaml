@@ -1,0 +1,29 @@
+name:                tube-bot-fulfillment
+version:             0.1.0.0
+synopsis:            Simple project template from stack
+description:         Please see README.md
+homepage:            https://github.com/passy/tube-bot-fulfillment#readme
+license:             BSD3
+author:              Pascal Hartig
+maintainer:          phartig@rdrei.net
+copyright:           2016 Pascal Hartig
+category:            Web
+extra-source-files:
+- README.md
+
+dependencies:
+  - base >= 4.7 && < 5
+  - aeson
+  - lens
+  - lens-aeson
+  - protolude
+  - protolude
+  - servant-server
+  - text
+  - wai
+  - warp
+
+executables:
+  tube-bot-fulfillment:
+    source-dirs:      src
+    main:             Main.hs

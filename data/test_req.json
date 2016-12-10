@@ -1,0 +1,40 @@
+{
+  "id": "ac9c34ef-f3cb-4e7a-923c-f74bfe1f0898",
+  "timestamp": "2016-12-10T23:53:40.911Z",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "Give me eastbound departures for Hammersmith and City.",
+    "speech": "",
+    "action": "list-departures",
+    "actionIncomplete": false,
+    "parameters": {
+      "line": "hammersmith and city",
+      "direction": "eastbound"
+    },
+    "contexts": [
+
+    ],
+    "metadata": {
+      "intentId": "aef959da-ad17-449d-b8ec-56548336f666",
+      "webhookUsed": "true",
+      "webhookForSlotFillingUsed": "false",
+      "intentName": "request-departures"
+    },
+    "fulfillment": {
+      "speech": "I found these departures for eastbound hammersmith and city line trains: ...",
+      "messages": [
+        {
+          "type": 0,
+          "speech": "I found these departures for eastbound hammersmith and city line trains: ..."
+        }
+      ]
+    },
+    "score": 1.0
+  },
+  "status": {
+    "code": 200,
+    "errorType": "success"
+  },
+  "sessionId": "cddaf807-1305-42ff-bc0b-311be889c911",
+  "originalRequest": null
+}
