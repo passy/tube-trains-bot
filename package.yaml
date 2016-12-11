@@ -36,6 +36,7 @@ dependencies:
   - unordered-containers
   - wai
   - warp
+  - wreq
 
 executables:
   tube-bot-fulfillment:
