@@ -8,7 +8,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
 module Config
-  ( Config(appId, appKey, stationName, port)
+  ( Config(Config, appId, appKey, stationName, port)
   , loadConfig
   ) where
 
