@@ -42,7 +42,7 @@ instance Aeson.FromJSON WebhookAction where
   parseJSON _ = return ActionUndefined
 
 data WebhookResult = WebhookResult
-  { action :: Text
+  { action :: WebhookAction
   , parameters :: WebhookParameters
   } deriving (Generic, Show, Aeson.FromJSON)
 
