@@ -13,10 +13,9 @@ import Protolude hiding ((<>))
 
 import Data.Aeson
 import qualified Data.Aeson as Aeson
+import qualified Data.HashMap.Strict as HMS
 import Data.Monoid
-import Data.Proxy
 import Data.Text
-import GHC.Generics
 import Network.Wai
 import Network.Wai.Handler.Warp
 
@@ -26,8 +25,8 @@ import Servant
 
 -- | Partial definition of the request payload
 data WebhookRequest = WebhookRequest
-  { _result :: WebhookResult
-  , _id :: Text
+  { result :: WebhookResult
+  , id :: Text
   } deriving (Generic, Show, FromJSON)
 
 data WebhookAction
@@ -41,12 +40,12 @@ instance Aeson.FromJSON WebhookAction where
   parseJSON _ = return ActionUndefined
 
 data WebhookResult = WebhookResult
-  { _action :: Text
-  , _parameters :: WebhookParameters
+  { action :: Text
+  , parameters :: WebhookParameters
   } deriving (Generic, Show, FromJSON)
 
 newtype WebhookParameters =
-  WebhookParameters [(Text, Text)]
+  WebhookParameters (HMS.HashMap Text Text)
   deriving (Generic, Show, FromJSON)
 
 -- | A greet message data type
@@ -86,7 +85,7 @@ server = helloH :<|> postGreetH :<|> postWebhookH :<|> deleteGreetH
 
         postGreetH greet = return greet
 
-        postWebhookH wh = return $ _id wh
+        postWebhookH wh = return $ id wh
 
         deleteGreetH _ = return NoContent
 
