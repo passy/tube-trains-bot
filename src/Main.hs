@@ -89,8 +89,10 @@ server = helloH :<|> postGreetH :<|> postWebhookH :<|> deleteGreetH
         postGreetH :: Monad m => a -> m a
         postGreetH greet = return greet
 
-        postWebhookH :: Monad m => WebhookRequest -> m Text
-        postWebhookH wh = return $ id wh
+        postWebhookH :: MonadIO m => WebhookRequest -> m Text
+        postWebhookH wh = do
+          print wh
+          return $ id wh
 
         deleteGreetH :: Monad m => a -> m Servant.NoContent
         deleteGreetH _ = return Servant.NoContent
