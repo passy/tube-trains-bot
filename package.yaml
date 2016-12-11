@@ -19,13 +19,13 @@ ghc-options:
   - -Wincomplete-record-updates
   - -Wincomplete-uni-patterns
   - -Wmissing-exported-signatures
-  - -Wmissing-import-lists
   - -Wmissing-local-signatures
   - -Wmonomorphism-restriction
 
 dependencies:
   - base >= 4.7 && < 5
   - aeson
+  - dhall
   - lens
   - lens-aeson
   - protolude

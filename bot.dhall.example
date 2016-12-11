@@ -1,0 +1,9 @@
+{
+  -- Tube station name as available here:
+  -- http://transportapi.com/v3/uk/tube.html?app_key=<app_key>&app_id=<app_id>
+  stationName = "ALE"
+  -- Find the credentials at https://developer.transportapi.com/
+, appKey = "1234"
+, appId = "4567"
+, port = 8001
+}

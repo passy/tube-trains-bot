@@ -13,21 +13,15 @@ import Protolude hiding ((<>))
 import Data.Monoid ((<>))
 
 -- Operator imports
-import Servant ((:<|>), (:>))
+import Servant ((:<|>)((:<|>)), (:>))
 
 import qualified Data.Aeson as Aeson
 import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
-import qualified Network.Wai as Wai
 import qualified Network.Wai.Handler.Warp as Warp
 import qualified Servant as Servant
 
--- * Configuration
-
-data Configuration = Configuration
-  { confAppId :: Text
-  , confAppKey :: Text
-  , confStation :: Text }
+import qualified Config as Config
 
 -- * Webhook Fulfillment Server
 
@@ -85,7 +79,7 @@ testApi = Proxy
 --
 -- Each handler runs in the 'Handler' monad.
 server :: Servant.Server TestApi
-server = helloH Servant.:<|> postGreetH Servant.:<|> postWebhookH Servant.:<|> deleteGreetH
+server = helloH :<|> postGreetH :<|> postWebhookH :<|> deleteGreetH
 
   where helloH :: Monad m => Text -> Maybe Bool -> m Greet
         helloH name Nothing = helloH name (Just False)
@@ -114,4 +108,7 @@ runTestServer port = Warp.run port test
 
 -- Put this all to work!
 main :: IO ()
-main = runTestServer 8001
+main = do
+  config <- Config.loadConfig
+  putStrLn $ ("Starting server at http://localhost:" <> show (Config.port config) <> " ...":: Text)
+  runTestServer 8001
