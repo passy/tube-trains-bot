@@ -9,7 +9,19 @@ maintainer:          phartig@rdrei.net
 copyright:           2016 Pascal Hartig
 category:            Web
 extra-source-files:
-- README.md
+  - README.md
+  - stack.yaml
+
+ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Widentities
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  - -Wmissing-exported-signatures
+  - -Wmissing-import-lists
+  - -Wmissing-local-signatures
+  - -Wmonomorphism-restriction
 
 dependencies:
   - base >= 4.7 && < 5
