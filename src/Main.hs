@@ -21,7 +21,8 @@ import qualified Data.Text as T
 import qualified Network.Wai.Handler.Warp as Warp
 import qualified Servant
 
-import qualified Config as Config
+import qualified Config
+import qualified Api
 
 -- * Webhook Fulfillment Server
 
