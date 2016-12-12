@@ -8,20 +8,17 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
 module Config
-  ( Config(Config, appId, appKey, stationName, port)
+  ( Config(Config, port, defaultStation)
   , loadConfig
   ) where
 
 import Protolude
-import qualified Dhall as Dhall
+import qualified Dhall
 
 data Config = Config
-  { appId :: Dhall.Text
-  , appKey :: Dhall.Text
-  , port :: Integer
-  , stationName :: Dhall.Text
+  { port :: Integer
+  , defaultStation :: Dhall.Text
   } deriving (Generic, Show, Dhall.Interpret)
 
 loadConfig :: IO Config
-loadConfig = do
-  Dhall.input Dhall.auto "./bot.dhall"
+loadConfig = Dhall.input Dhall.auto "./bot.dhall"

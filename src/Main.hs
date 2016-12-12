@@ -19,7 +19,7 @@ import qualified Data.Aeson as Aeson
 import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
 import qualified Network.Wai.Handler.Warp as Warp
-import qualified Servant as Servant
+import qualified Servant
 
 import qualified Config as Config
 
