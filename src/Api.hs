@@ -1,7 +1,9 @@
-{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Api () where
 
@@ -13,6 +15,7 @@ import qualified Data.Text.Format as Format
 import qualified Network.Wreq as Wreq
 import qualified Data.Vector as Vector
 import qualified Data.HashMap.Strict as HMS
+import qualified Data.Hashable as Hashable
 
 import qualified Config
 
@@ -22,7 +25,7 @@ import Data.Aeson.Lens
 import Data.Aeson ((.:))
 
 data Direction = Westbound | Eastbound | Northbound | Southbound | Spellbound
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic, Hashable.Hashable)
 
 instance Aeson.FromJSON Direction where
   parseJSON (Aeson.String a) | a == "Westbound" = return Westbound
@@ -40,7 +43,7 @@ data Departure = Departure { departureLine :: Text -- TODO: Should probably be a
   deriving (Show, Eq)
 
 instance Aeson.FromJSON Departure where
-  parseJSON (Aeson.Object o) =
+  parseJSON = Aeson.withObject "departure" $ \o ->
     Departure <$> o .: "route_id"
               <*> o .: "destination_name"
               <*> o .: "time_seconds"
@@ -61,7 +64,7 @@ mkUrlForStation Config.Config{Config.defaultStation} stationName =
 
 infixr 8 <$$>
 
-getDeparturesForStation :: MonadIO m => Config.Config -> Maybe Text -> m (Maybe (Vector.Vector (Direction, [Departure])))
+getDeparturesForStation :: MonadIO m => Config.Config -> Maybe Text -> m (Maybe DepartureMap)
 getDeparturesForStation config stationName = do
   let url = mkUrlForStation config stationName
   r <- liftIO . Wreq.get $ T.unpack url
@@ -74,7 +77,7 @@ getDeparturesForStation config stationName = do
       departures :: Maybe (Vector.Vector (Direction, [Departure]))
       departures = wat mdepartures
 
-  return departures
+  return $ DepartureMap . HMS.fromList . Vector.toList <$> departures
 
   where
     wat :: Maybe (Vector.Vector (Maybe (Direction, [Departure]))) -> Maybe (Vector.Vector (Direction, [Departure]))
