@@ -113,5 +113,5 @@ runTestServer port = Warp.run port test
 main :: IO ()
 main = do
   config <- Config.loadConfig
-  putStrLn $ ("Starting server at http://localhost:" <> show (Config.port config) <> " ...":: Text)
+  putStrLn $ ("Starting server at http://localhost:" <> show (Config.port config) <> " ..." :: Text)
   runTestServer 8001
