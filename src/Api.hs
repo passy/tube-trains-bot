@@ -7,21 +7,22 @@ module Api () where
 
 import Protolude hiding ((<>))
 import qualified Data.Aeson as Aeson
+import qualified Data.Aeson.Types as Aeson
 import qualified Data.Text as T
 import qualified Data.Text.Format as Format
 import qualified Network.Wreq as Wreq
 import qualified Data.Vector as Vector
+import qualified Data.HashMap.Strict as HMS
 
 import qualified Config
 
 import Control.Lens
 import Data.Aeson.Lens
 
+import Data.Aeson ((.:))
+
 data Direction = Westbound | Eastbound | Northbound | Southbound | Spellbound
   deriving (Show, Eq)
-
--- FIXME
-data Departure = Departure
 
 instance Aeson.FromJSON Direction where
   parseJSON (Aeson.String a) | a == "Westbound" = return Westbound
@@ -29,6 +30,23 @@ instance Aeson.FromJSON Direction where
                              | a == "Northbound" = return Northbound
                              | a == "Southbound" = return Northbound
                              | otherwise = return Spellbound
+  parseJSON _ = mempty
+
+
+data Departure = Departure { departureLine :: Text -- TODO: Should probably be a proper type.
+                           , departureDestination :: Text
+                           , departureSeconds :: Int
+                           }
+  deriving (Show, Eq)
+
+instance Aeson.FromJSON Departure where
+  parseJSON (Aeson.Object o) =
+    Departure <$> o .: "route_id"
+              <*> o .: "destination_name"
+              <*> o .: "time_seconds"
+
+newtype DepartureMap = DepartureMap (HMS.HashMap Direction [Departure])
+  deriving (Show, Eq)
 
 stationUrl :: Format.Format
 stationUrl = "https://citymapper.com/api/1/metrodepartures?headways=1&ids={}&region_id=uk-london"
@@ -52,7 +70,7 @@ getDeparturesForStation config stationName = do
   let groupings :: Maybe (Vector.Vector Aeson.Value)
       groupings = r ^? Wreq.responseBody . key "stations" . nth 0 . key "sections" . nth 0 . key "departure_groupings" . _Array
       mdepartures :: Maybe (Vector.Vector (Maybe (Direction, [Departure])))
-      mdepartures = (\vec -> extractDepartures <$> vec) <$> groupings
+      mdepartures = (\vec -> extractDepartures' <$> vec) <$> groupings
       departures :: Maybe (Vector.Vector (Direction, [Departure]))
       departures = wat mdepartures
 
@@ -65,9 +83,9 @@ getDeparturesForStation config stationName = do
       wat <- sequence vec
       return wat
 
-    extractDepartures :: Aeson.Value -> Maybe (Direction, [Departure])
-    extractDepartures a = do
-      direction <- a ^? key "direction_name"
-      departures <- a ^? key "departures"
-      -- Fixme
-      return (Westbound, [Departure])
+    extractDepartures :: Aeson.Value -> Aeson.Parser (Direction, [Departure])
+    extractDepartures = Aeson.withObject "departure" $ \o ->
+      (,) <$> o .: "direction_name" <*> o .: "departures"
+
+    extractDepartures' :: Aeson.Value -> Maybe (Direction, [Departure])
+    extractDepartures' a = Aeson.parseMaybe extractDepartures a
