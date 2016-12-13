@@ -79,8 +79,8 @@ testApi = Proxy
 -- that represents the API, are glued together using :<|>.
 --
 -- Each handler runs in the 'Handler' monad.
-server :: Servant.Server TestApi
-server = helloH :<|> postGreetH :<|> postWebhookH :<|> deleteGreetH
+server :: Config.Config -> Servant.Server TestApi
+server c = helloH :<|> postGreetH :<|> postWebhookH :<|> deleteGreetH
 
   where helloH :: Monad m => Text -> Maybe Bool -> m Greet
         helloH name Nothing = helloH name (Just False)
@@ -92,7 +92,8 @@ server = helloH :<|> postGreetH :<|> postWebhookH :<|> deleteGreetH
 
         postWebhookH :: MonadIO m => WebhookRequest -> m Text
         postWebhookH wh = do
-          print wh
+          res <- Api.loadDeparturesForStation c (Just "AldgateEast")
+          print res
           return $ id wh
 
         deleteGreetH :: Monad m => a -> m Servant.NoContent
@@ -100,18 +101,18 @@ server = helloH :<|> postGreetH :<|> postWebhookH :<|> deleteGreetH
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
-test :: Servant.Application
-test = Servant.serve testApi server
+app :: Config.Config -> Servant.Application
+app c = Servant.serve testApi (server c)
 
 -- Run the server.
 --
 -- 'run' comes from Network.Wai.Handler.Warp
-runTestServer :: Warp.Port -> IO ()
-runTestServer port = Warp.run port test
+runTestServer :: Config.Config -> IO ()
+runTestServer c = Warp.run (fromIntegral $ Config.port c) (app c)
 
 -- Put this all to work!
 main :: IO ()
 main = do
   config <- Config.loadConfig
   putStrLn $ ("Starting server at http://localhost:" <> show (Config.port config) <> " ..." :: Text)
-  runTestServer 8001
+  runTestServer config

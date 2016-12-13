@@ -5,7 +5,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Api () where
+module Api (loadDeparturesForStation) where
 
 import Protolude hiding ((<>))
 import qualified Data.Aeson as Aeson
@@ -64,8 +64,8 @@ mkUrlForStation Config.Config{Config.defaultStation} stationName =
 
 infixr 8 <$$>
 
-getDeparturesForStation :: MonadIO m => Config.Config -> Maybe Text -> m (Maybe DepartureMap)
-getDeparturesForStation config stationName = do
+loadDeparturesForStation :: MonadIO m => Config.Config -> Maybe Text -> m (Maybe DepartureMap)
+loadDeparturesForStation config stationName = do
   let url = mkUrlForStation config stationName
   r <- liftIO . Wreq.get $ T.unpack url
   -- TODO: This is super fragile. I should at iterate and find the right depature groupings. The first
