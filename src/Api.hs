@@ -59,11 +59,6 @@ mkUrlForStation Config.Config{Config.defaultStation} stationName =
   let station = fromMaybe (toStrict defaultStation) stationName
   in toStrict $ Format.format stationUrl (Format.Only station)
 
-(<$$>) :: (Functor f, Functor g) => (a -> b) -> g (f a) -> g (f b)
-(<$$>) = fmap . fmap
-
-infixr 8 <$$>
-
 loadDeparturesForStation :: MonadIO m => Config.Config -> Maybe Text -> m (Maybe DepartureMap)
 loadDeparturesForStation config stationName = do
   let url = mkUrlForStation config stationName
@@ -75,17 +70,11 @@ loadDeparturesForStation config stationName = do
       mdepartures :: Maybe (Vector.Vector (Maybe (Direction, [Departure])))
       mdepartures = (\vec -> extractDepartures' <$> vec) <$> groupings
       departures :: Maybe (Vector.Vector (Direction, [Departure]))
-      departures = wat mdepartures
+      departures = sequence =<< mdepartures
 
   return $ DepartureMap . HMS.fromList . Vector.toList <$> departures
 
   where
-    wat :: Maybe (Vector.Vector (Maybe (Direction, [Departure]))) -> Maybe (Vector.Vector (Direction, [Departure]))
-    wat mvec = do
-      vec <- mvec
-      wat <- sequence vec
-      return wat
-
     extractDepartures :: Aeson.Value -> Aeson.Parser (Direction, [Departure])
     extractDepartures = Aeson.withObject "departure" $ \o ->
       (,) <$> o .: "direction_name" <*> o .: "departures"
