@@ -16,6 +16,7 @@ import Data.Monoid ((<>))
 import Servant ((:<|>)((:<|>)), (:>))
 
 import qualified Data.Aeson as Aeson
+import qualified Data.Aeson.Types as Aeson
 import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
 import qualified Network.Wai.Handler.Warp as Warp
@@ -28,9 +29,12 @@ import qualified Api
 
 -- | Partial definition of the request payload
 data WebhookRequest = WebhookRequest
-  { result :: WebhookResult
-  , id :: Text
-  } deriving (Generic, Show, Aeson.FromJSON)
+  { _result :: WebhookResult
+  , _id :: Text
+  } deriving (Generic, Show)
+
+instance Aeson.FromJSON WebhookRequest where
+  parseJSON = Aeson.genericParseJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
 
 data WebhookAction
   = ActionListDepartures
@@ -43,9 +47,12 @@ instance Aeson.FromJSON WebhookAction where
   parseJSON _ = return ActionUndefined
 
 data WebhookResult = WebhookResult
-  { action :: WebhookAction
-  , parameters :: WebhookParameters
-  } deriving (Generic, Show, Aeson.FromJSON)
+  { _action :: WebhookAction
+  , _parameters :: WebhookParameters
+  } deriving (Generic, Show)
+
+instance Aeson.FromJSON WebhookResult where
+  parseJSON = Aeson.genericParseJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
 
 newtype WebhookParameters =
   WebhookParameters (HMS.HashMap Text Text)
@@ -94,7 +101,7 @@ server c = helloH :<|> postGreetH :<|> postWebhookH :<|> deleteGreetH
         postWebhookH wh = do
           res <- Api.loadDeparturesForStation c (Just "AldgateEast")
           print res
-          return $ id wh
+          return $ _id wh
 
         deleteGreetH :: Monad m => a -> m Servant.NoContent
         deleteGreetH _ = return Servant.NoContent
@@ -114,5 +121,5 @@ runTestServer c = Warp.run (fromIntegral $ Config.port c) (app c)
 main :: IO ()
 main = do
   config <- Config.loadConfig
-  putStrLn $ ("Starting server at http://localhost:" <> show (Config.port config) <> " ..." :: Text)
+  putStrLn ("Starting server at http://localhost:" <> show (Config.port config) <> " ..." :: Text)
   runTestServer config
