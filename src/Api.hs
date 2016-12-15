@@ -67,10 +67,8 @@ loadDeparturesForStation config stationName = do
   -- part appears to be fixed. I'm sure there's some cool Lens shit for this.
   let groupings :: Maybe (Vector.Vector Aeson.Value)
       groupings = r ^? Wreq.responseBody . key "stations" . nth 0 . key "sections" . nth 0 . key "departure_groupings" . _Array
-      mdepartures :: Maybe (Vector.Vector (Maybe (Direction, [Departure])))
-      mdepartures = fmap extractDepartures' <$> groupings
       departures :: Maybe (Vector.Vector (Direction, [Departure]))
-      departures = sequence =<< mdepartures
+      departures = sequence =<< fmap extractDepartures' <$> groupings
 
   return $ DepartureMap . HMS.fromList . Vector.toList <$> departures
 
