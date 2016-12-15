@@ -8,8 +8,8 @@
 module Api
   ( loadDeparturesForStation
   , Departure(..)
-  , Direction
-  , DepartureMap
+  , Direction(..)
+  , DepartureMap(..)
   ) where
 
 import Protolude hiding ((<>))

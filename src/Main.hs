@@ -18,6 +18,7 @@ import Servant ((:>))
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
 import qualified Data.HashMap.Strict as HMS
+import qualified Data.Text as T
 import qualified Network.Wai.Handler.Warp as Warp
 import qualified Servant
 
@@ -70,7 +71,7 @@ mkFulfillment :: Text -> WebhookFulfillment
 mkFulfillment text = WebhookFulfilment text text "tube-bot-fulfillment"
 
 -- API specification
-type Api = "webhook" :> Servant.ReqBody '[Servant.JSON] WebhookRequest :> Servant.Post '[Servant.JSON] Text
+type Api = "webhook" :> Servant.ReqBody '[Servant.JSON] WebhookRequest :> Servant.Post '[Servant.JSON] WebhookFulfillment
 
 testApi :: Proxy Api
 testApi = Proxy
@@ -84,11 +85,35 @@ testApi = Proxy
 server :: Config.Config -> Servant.Server Api
 server c = postWebhookH
 
-  where postWebhookH :: MonadIO m => WebhookRequest -> m Text
+  -- This isn't a great Monad to work in. I want better error handling.
+  where postWebhookH :: MonadIO m => WebhookRequest -> m WebhookFulfillment
         postWebhookH wh = do
           res <- Api.loadDeparturesForStation c (Just "AldgateEast")
-          print res
-          return $ _id wh
+          return $ case res of
+                Nothing -> mkFulfillment "Sorry, I couldn't resolve any trains right now."
+                Just res' -> renameMe res'
+
+        renameMe :: Api.DepartureMap -> WebhookFulfillment
+        renameMe (Api.DepartureMap res) = do
+          let wdepartures = HMS.lookup Api.Westbound res
+          let text = case wdepartures of
+                Just departures -> formatDepartures departures
+                Nothing -> mkFulfillment "Sorry, I couldn't find any westbound train departures right now."
+
+          text
+
+formatDepartures :: [Api.Departure] -> WebhookFulfillment
+formatDepartures ds =
+  let preamble :: Text
+      preamble = "I found the following westbound departures from Aldgate East: "
+      format d = Api.departureLine d
+              <> " to "
+              <> Api.departureDestination d
+              <> " in "
+              <> (show $ Api.departureSeconds d)
+              <> " seconds."
+      body = format <$> ds
+  in mkFulfillment $ preamble <> T.unwords body
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
