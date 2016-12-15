@@ -68,7 +68,7 @@ loadDeparturesForStation config stationName = do
   let groupings :: Maybe (Vector.Vector Aeson.Value)
       groupings = r ^? Wreq.responseBody . key "stations" . nth 0 . key "sections" . nth 0 . key "departure_groupings" . _Array
       mdepartures :: Maybe (Vector.Vector (Maybe (Direction, [Departure])))
-      mdepartures = (\vec -> extractDepartures' <$> vec) <$> groupings
+      mdepartures = fmap extractDepartures' <$> groupings
       departures :: Maybe (Vector.Vector (Direction, [Departure]))
       departures = sequence =<< mdepartures
 
