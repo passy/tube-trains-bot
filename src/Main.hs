@@ -13,12 +13,11 @@ import Protolude hiding ((<>))
 import Data.Monoid ((<>))
 
 -- Operator imports
-import Servant ((:<|>)((:<|>)), (:>))
+import Servant ((:>))
 
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
 import qualified Data.HashMap.Strict as HMS
-import qualified Data.Text as T
 import qualified Network.Wai.Handler.Warp as Warp
 import qualified Servant
 
@@ -58,26 +57,10 @@ newtype WebhookParameters =
   WebhookParameters (HMS.HashMap Text Text)
   deriving (Generic, Show, Aeson.FromJSON)
 
--- | A greet message data type
-newtype Greet = Greet { _msg :: Text }
-  deriving (Generic, Show, Aeson.FromJSON, Aeson.ToJSON)
-
 -- API specification
-type TestApi =
-       -- GET /hello/:name?capital={true, false}  returns a Greet as JSON
-       "hello" :> Servant.Capture "name" Text :> Servant.QueryParam "capital" Bool :> Servant.Get '[Servant.JSON] Greet
+type Api = "webhook" :> Servant.ReqBody '[Servant.JSON] WebhookRequest :> Servant.Post '[Servant.JSON] Text
 
-       -- POST /greet with a Greet as JSON in the request body,
-       --             returns a Greet as JSON
-  :<|> "greet" :> Servant.ReqBody '[Servant.JSON] Greet :> Servant.Post '[Servant.JSON] Greet
-
-       -- Temporary
-  :<|> "webhook" :> Servant.ReqBody '[Servant.JSON] WebhookRequest :> Servant.Post '[Servant.JSON] Text
-
-       -- DELETE /greet/:greetid
-  :<|> "greet" :> Servant.Capture "greetid" Text :> Servant.Delete '[Servant.JSON] Servant.NoContent
-
-testApi :: Proxy TestApi
+testApi :: Proxy Api
 testApi = Proxy
 
 -- Server-side handlers.
@@ -86,25 +69,14 @@ testApi = Proxy
 -- that represents the API, are glued together using :<|>.
 --
 -- Each handler runs in the 'Handler' monad.
-server :: Config.Config -> Servant.Server TestApi
-server c = helloH :<|> postGreetH :<|> postWebhookH :<|> deleteGreetH
+server :: Config.Config -> Servant.Server Api
+server c = postWebhookH
 
-  where helloH :: Monad m => Text -> Maybe Bool -> m Greet
-        helloH name Nothing = helloH name (Just False)
-        helloH name (Just False) = return . Greet $ "Hello, " <> name
-        helloH name (Just True) = return . Greet . T.toUpper $ "Hello, " <> name
-
-        postGreetH :: Monad m => a -> m a
-        postGreetH greet = return greet
-
-        postWebhookH :: MonadIO m => WebhookRequest -> m Text
+  where postWebhookH :: MonadIO m => WebhookRequest -> m Text
         postWebhookH wh = do
           res <- Api.loadDeparturesForStation c (Just "AldgateEast")
           print res
           return $ _id wh
-
-        deleteGreetH :: Monad m => a -> m Servant.NoContent
-        deleteGreetH _ = return Servant.NoContent
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
