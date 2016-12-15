@@ -96,4 +96,4 @@ loadDeparturesForStation config stationName = do
     extractDepartures :: Aeson.Value -> Aeson.Parser (Direction, [Departure])
     extractDepartures = Aeson.withObject "departure" $ \o -> (,) <$> o .: "direction_name" <*> o .: "departures"
     extractDepartures' :: Aeson.Value -> Maybe (Direction, [Departure])
-    extractDepartures' a = Aeson.parseMaybe extractDepartures a
+    extractDepartures' = Aeson.parseMaybe extractDepartures

@@ -57,6 +57,18 @@ newtype WebhookParameters =
   WebhookParameters (HMS.HashMap Text Text)
   deriving (Generic, Show, Aeson.FromJSON)
 
+data WebhookFulfillment = WebhookFulfilment
+  { _speech :: Text
+  , _displayText :: Text
+  , _source :: Text
+  } deriving (Generic, Show)
+
+instance Aeson.ToJSON WebhookFulfillment where
+  toJSON = Aeson.genericToJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
+
+mkFulfillment :: Text -> WebhookFulfillment
+mkFulfillment text = WebhookFulfilment text text "tube-bot-fulfillment"
+
 -- API specification
 type Api = "webhook" :> Servant.ReqBody '[Servant.JSON] WebhookRequest :> Servant.Post '[Servant.JSON] Text
 
