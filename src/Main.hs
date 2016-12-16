@@ -110,7 +110,7 @@ formatDepartures ds =
               <> " to "
               <> Api.departureDestination d
               <> " in "
-              <> (show $ Api.departureSeconds d)
+              <> show (Api.departureSeconds d)
               <> " seconds."
       body = format <$> ds
   in mkFulfillment $ preamble <> T.unwords body
