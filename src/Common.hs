@@ -24,10 +24,10 @@ data Direction
 instance Aeson.FromJSON Direction where
   parseJSON (Aeson.String a) =
     case T.toLower a of
-      "Westbound" -> return Westbound
-      "Eastbound" -> return Eastbound
-      "Northbound" -> return Northbound
-      "Southbound" -> return Northbound
+      "westbound" -> return Westbound
+      "eastbound" -> return Eastbound
+      "northbound" -> return Northbound
+      "southbound" -> return Northbound
       _ -> return Spellbound
 
   parseJSON _ = mempty
