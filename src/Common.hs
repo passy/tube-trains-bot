@@ -5,10 +5,12 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Common (Direction(..), formatDirection) where
+module Common
+  ( Direction(..)
+  , formatDirection
+  ) where
 
 import Protolude hiding ((<>))
-
 import qualified Data.Aeson as Aeson
 import qualified Data.Hashable as Hashable
 import qualified Data.Text as T
