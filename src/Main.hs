@@ -1,6 +1,8 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -14,11 +16,13 @@ import Data.Monoid ((<>))
 
 -- Operator imports
 import Servant ((:>))
+import Control.Lens.Operators ((<&>))
 
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
 import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
+import qualified Control.Monad.Except as Ex
 import qualified Network.Wai.Handler.Warp as Warp
 import qualified Servant
 
@@ -35,6 +39,8 @@ data WebhookRequest = WebhookRequest
 
 instance Aeson.FromJSON WebhookRequest where
   parseJSON = Aeson.genericParseJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
+
+newtype FulfillmentError = FulfillmentError Text
 
 data WebhookAction
   = ActionListDepartures
@@ -87,20 +93,31 @@ server c = postWebhookH
 
   -- This isn't a great Monad to work in. I want better error handling.
   where postWebhookH :: MonadIO m => WebhookRequest -> m WebhookFulfillment
-        postWebhookH wh = do
-          res <- Api.loadDeparturesForStation c (Just "AldgateEast")
-          return $ case res of
-                Nothing -> mkFulfillment "Sorry, I couldn't resolve any trains right now."
-                Just res' -> renameMe res'
+        postWebhookH wh =
+          Ex.runExceptT (fulfillDepartureReq c wh) <&> \case
+            Left (FulfillmentError e) -> mkFulfillment e
+            Right f -> f
 
-        renameMe :: Api.DepartureMap -> WebhookFulfillment
-        renameMe (Api.DepartureMap res) = do
-          let wdepartures = HMS.lookup Api.Westbound res
-          let text = case wdepartures of
-                Just departures -> formatDepartures departures
-                Nothing -> mkFulfillment "Sorry, I couldn't find any westbound train departures right now."
+fulfillDepartureReq
+  :: (MonadIO m, Ex.MonadError FulfillmentError m)
+  => Config.Config
+  -> WebhookRequest
+  -> m WebhookFulfillment
+fulfillDepartureReq c wh = do
+  res <- Api.loadDeparturesForStation c $ Just "AldgateEast"
+  case res of
+    Just res' -> filterDepartures res'
+    Nothing -> Ex.throwError $ FulfillmentError "Sorry, I couldn't resolve any trains right now."
 
-          text
+  where
+    filterDepartures
+      :: (Ex.MonadError FulfillmentError m)
+      => Api.DepartureMap
+      -> m WebhookFulfillment
+    filterDepartures (Api.DepartureMap d) =
+      case HMS.lookup Api.Westbound d of
+        Just departures -> return $ formatDepartures departures
+        Nothing -> Ex.throwError $ FulfillmentError "Sorry, I couldn't find any westbound train departures right now."
 
 formatDepartures :: [Api.Departure] -> WebhookFulfillment
 formatDepartures ds =

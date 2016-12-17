@@ -29,6 +29,7 @@ dependencies:
   - hashable
   - lens
   - lens-aeson
+  - mtl
   - protolude
   - protolude
   - servant-server
