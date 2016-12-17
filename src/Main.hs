@@ -27,6 +27,7 @@ import qualified Network.Wai.Handler.Warp as Warp
 import qualified Servant
 
 import qualified Config
+import qualified Common
 import qualified Api
 
 -- * Webhook Fulfillment Server
@@ -117,22 +118,29 @@ fulfillDepartureReq c wh = do
       => Api.DepartureMap
       -> m WebhookFulfillment
     filterDepartures (Api.DepartureMap d) =
-      case HMS.lookup Api.Westbound d of
-        Just departures -> return $ formatDepartures departures
+      return $ case HMS.lookup Api.Westbound d of
+        -- We found departures for the specified direction.
+        Just departures -> return $ formatDepartures Api.Westbound departures
+        -- We can't filter by direction, so we'll list them all.
         Nothing -> Ex.throwError $ FulfillmentError "Sorry, I couldn't find any westbound train departures right now."
 
-formatDepartures :: [Api.Departure] -> WebhookFulfillment
-formatDepartures ds =
+formatDepartures :: Common.Direction -> [Api.Departure] -> WebhookFulfillment
+formatDepartures direction ds =
   let preamble :: Text
-      preamble = "I found the following westbound departures from Aldgate East: "
+      preamble = "I found the following " <> Common.formatDirection direction <> " departures from Aldgate East: "
       format d = Api.departureLine d
               <> " to "
               <> Api.departureDestination d
               <> " in "
-              <> show (Api.departureSeconds d)
+              <> formatSeconds (Api.departureSeconds d)
               <> " seconds."
       body = format <$> ds
   in mkFulfillment $ preamble <> T.unwords body
+
+formatSeconds :: Num n => n -> Text
+formatSeconds n | n < 60 = "less than a minute"
+                | n <= 90 = show n <> " seconds"
+                | otherwise = round (n / 60) <> " minutes"
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
