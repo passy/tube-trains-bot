@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE NamedFieldPuns #-}
@@ -8,7 +7,6 @@
 module Api
   ( loadDeparturesForStation
   , Departure(..)
-  , Direction(..)
   , DepartureMap(..)
   ) where
 
@@ -20,31 +18,14 @@ import qualified Data.Text.Format as Format
 import qualified Network.Wreq as Wreq
 import qualified Data.Vector as Vector
 import qualified Data.HashMap.Strict as HMS
-import qualified Data.Hashable as Hashable
 
 import qualified Config
+import qualified Common
 
 import Control.Lens
 import Data.Aeson.Lens
 
 import Data.Aeson ((.:))
-
-data Direction
-  = Westbound
-  | Eastbound
-  | Northbound
-  | Southbound
-  | Spellbound
-  deriving (Show, Eq, Generic, Hashable.Hashable)
-
-instance Aeson.FromJSON Direction where
-  parseJSON (Aeson.String a)
-    | a == "Westbound" = return Westbound
-    | a == "Eastbound" = return Eastbound
-    | a == "Northbound" = return Northbound
-    | a == "Southbound" = return Northbound
-    | otherwise = return Spellbound
-  parseJSON _ = mempty
 
 data Departure = Departure
   { departureLine :: Text -- TODO: Should probably be a proper type.
@@ -60,7 +41,7 @@ instance Aeson.FromJSON Departure where
        "time_seconds"
 
 newtype DepartureMap =
-  DepartureMap (HMS.HashMap Direction [Departure])
+  DepartureMap (HMS.HashMap Common.Direction [Departure])
   deriving (Show, Eq)
 
 stationUrl :: Format.Format
@@ -89,11 +70,11 @@ loadDeparturesForStation config stationName = do
            . nth 0
            . key "departure_groupings"
            . _Array
-      departures :: Maybe (Vector.Vector (Direction, [Departure]))
+      departures :: Maybe (Vector.Vector (Common.Direction, [Departure]))
       departures = sequence =<< fmap extractDepartures' <$> groupings
   return $ DepartureMap . HMS.fromList . Vector.toList <$> departures
   where
-    extractDepartures :: Aeson.Value -> Aeson.Parser (Direction, [Departure])
+    extractDepartures :: Aeson.Value -> Aeson.Parser (Common.Direction, [Departure])
     extractDepartures = Aeson.withObject "departure" $ \o -> (,) <$> o .: "direction_name" <*> o .: "departures"
-    extractDepartures' :: Aeson.Value -> Maybe (Direction, [Departure])
+    extractDepartures' :: Aeson.Value -> Maybe (Common.Direction, [Departure])
     extractDepartures' = Aeson.parseMaybe extractDepartures

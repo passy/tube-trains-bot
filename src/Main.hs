@@ -40,6 +40,8 @@ data WebhookRequest = WebhookRequest
 instance Aeson.FromJSON WebhookRequest where
   parseJSON = Aeson.genericParseJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
 
+-- | Wraps a text that is sent to the user in case of an error and might be logged
+-- separately.
 newtype FulfillmentError = FulfillmentError Text
 
 data WebhookAction
