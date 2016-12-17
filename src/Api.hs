@@ -7,7 +7,6 @@
 module Api
   ( loadDeparturesForStation
   , Departure(..)
-  , Direction(..)
   , DepartureMap(..)
   ) where
 

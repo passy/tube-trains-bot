@@ -110,7 +110,7 @@ fulfillDepartureReq c wh = do
   res <- Api.loadDeparturesForStation c $ Just "AldgateEast"
   case res of
     Just res' -> filterDepartures res'
-    Nothing -> Ex.throwError $ FulfillmentError "Sorry, I couldn't resolve any trains right now."
+    Nothing -> Ex.throwError $ FulfillmentError "Sorry, I couldn't find any trains right now."
 
   where
     filterDepartures
@@ -118,13 +118,16 @@ fulfillDepartureReq c wh = do
       => Api.DepartureMap
       -> m WebhookFulfillment
     filterDepartures (Api.DepartureMap d) =
-      return $ case HMS.lookup Api.Westbound d of
+      return . mkFulfillment $ case HMS.lookup Common.Westbound d of
         -- We found departures for the specified direction.
-        Just departures -> return $ formatDepartures Api.Westbound departures
+        Just departures -> formatDepartures Common.Westbound departures
         -- We can't filter by direction, so we'll list them all.
-        Nothing -> Ex.throwError $ FulfillmentError "Sorry, I couldn't find any westbound train departures right now."
+        Nothing ->
+          let go m k v = formatDepartures k v : m
+              l = HMS.foldlWithKey' go empty d
+          in T.unwords l
 
-formatDepartures :: Common.Direction -> [Api.Departure] -> WebhookFulfillment
+formatDepartures :: Common.Direction -> [Api.Departure] -> Text
 formatDepartures direction ds =
   let preamble :: Text
       preamble = "I found the following " <> Common.formatDirection direction <> " departures from Aldgate East: "
@@ -135,12 +138,12 @@ formatDepartures direction ds =
               <> formatSeconds (Api.departureSeconds d)
               <> " seconds."
       body = format <$> ds
-  in mkFulfillment $ preamble <> T.unwords body
+  in preamble <> T.unwords body
 
-formatSeconds :: Num n => n -> Text
+formatSeconds :: Int -> Text
 formatSeconds n | n < 60 = "less than a minute"
                 | n <= 90 = show n <> " seconds"
-                | otherwise = round (n / 60) <> " minutes"
+                | otherwise = show (quot n 60) <> " minutes"
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
