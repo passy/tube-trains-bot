@@ -66,9 +66,11 @@ data WebhookResult = WebhookResult
 instance Aeson.FromJSON WebhookResult where
   parseJSON = Aeson.genericParseJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
 
+-- TODO: Figure out if we can easily turn those into `Nothing` if they're empty.
 data WebhookParameters = WebhookParameters
   { _direction :: Maybe Common.Direction
   , _station :: Maybe Text
+  , _line :: Maybe Text
   } deriving (Generic, Show)
 
 instance Aeson.FromJSON WebhookParameters where
@@ -116,7 +118,12 @@ server c = postWebhookH
             Right f -> f
 
         aboutH :: Monad m => m WebhookFulfillment
-        aboutH = pure $ mkFulfillment $ "I'm Passy's Tube Bot, running on " <> VersionInfo.compilerVersionName <> "."
+        aboutH = pure . mkFulfillment $
+             "I'm Passy's Tube Bot version "
+          <> VersionInfo.programVersion
+          <> ", running on "
+          <> VersionInfo.compilerVersionName
+          <> "."
 
         undefinedH :: Monad m => m WebhookFulfillment
         undefinedH = pure $ mkFulfillment $ "Sorry, I don't know how to help with that."
@@ -129,27 +136,41 @@ fulfillDepartureReq
 fulfillDepartureReq c wh = do
   let params = _parameters . _result $ wh
   let dir = fromMaybe Common.Spellbound $ _direction params
+  let line = _line params
   let station = _station params
   res <- Api.loadDeparturesForStation c station
   case res of
-    Just res' -> filterDepartures dir res'
+    Just res' -> filterDepartures dir line res'
     Nothing -> Ex.throwError $ FulfillmentError "Sorry, I couldn't find any trains right now."
-
   where
+    filterLine
+      :: Text
+      -> [Api.Departure]
+      -> Maybe [Api.Departure]
+    filterLine line ds =
+      let res = filter (\d -> Api.departureLine d == line) ds
+      in if null res
+           then Nothing
+           else Just res
+
     filterDepartures
       :: (Ex.MonadError FulfillmentError m)
       => Common.Direction
+      -> Maybe Text
       -> Api.DepartureMap
       -> m WebhookFulfillment
-    filterDepartures dir (Api.DepartureMap d) =
-      return . mkFulfillment $ case HMS.lookup dir d of
-        -- We found departures for the specified direction.
-        Just departures -> formatDepartures dir departures
-        -- We can't filter by direction, so we'll list them all.
-        Nothing ->
-          let go m k v = formatDepartures k v : m
-              l = HMS.foldlWithKey' go empty d
-          in T.unwords l
+    filterDepartures dir mline (Api.DepartureMap d) =
+      -- Filter by line if filter is provided
+      let d' = HMS.mapMaybe (maybe pure filterLine mline) d
+      in
+        return . mkFulfillment $ case HMS.lookup dir d' of
+          -- We found departures for the specified direction.
+          Just departures -> formatDepartures dir departures
+          -- We can't filter by direction, so we'll list them all.
+          Nothing ->
+            let go m k v = formatDepartures k v : m
+                l = HMS.foldlWithKey' go empty d'
+            in T.unwords l
 
 formatDepartures :: Common.Direction -> [Api.Departure] -> Text
 formatDepartures direction ds =
