@@ -37,9 +37,9 @@ data Departure = Departure
 instance Aeson.FromJSON Departure where
   parseJSON =
     Aeson.withObject "departure" $
-    \o ->
-       Departure <$> o .: "route_id" <*> o .: "destination_name" <*> o .:
-       "time_seconds"
+      \o -> Departure <$> o .: "route_id"
+                      <*> o .: "destination_name"
+                      <*> o .: "time_seconds"
 
 newtype DepartureMap =
   DepartureMap (HMS.HashMap Common.Direction [Departure])
