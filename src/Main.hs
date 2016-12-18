@@ -131,9 +131,8 @@ server c = postWebhookH
 
         listDeparturesH :: MonadIO m => WebhookRequest -> m WebhookFulfillment
         listDeparturesH wh =
-          Ex.runExceptT (fulfillDepartureReq c wh) <&> \case
-            Left (FulfillmentError e) -> mkFulfillment e
-            Right f -> f
+          Ex.runExceptT (fulfillDepartureReq c wh)
+            <&> either (\(FulfillmentError e) -> mkFulfillment e) identity
 
         aboutH :: Monad m => m WebhookFulfillment
         aboutH = pure . mkFulfillment $

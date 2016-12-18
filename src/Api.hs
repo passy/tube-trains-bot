@@ -21,7 +21,6 @@ import qualified Data.HashMap.Strict as HMS
 
 import qualified Config
 import qualified Common
-import qualified Debug.Trace as Trace
 
 import Control.Lens
 import Data.Aeson.Lens
@@ -59,7 +58,7 @@ loadDeparturesForStation
   => Config.Config -> Maybe Text -> m (Maybe DepartureMap)
 loadDeparturesForStation config stationName = do
   let url = mkUrlForStation config stationName
-  r <- liftIO $ Wreq.get (Trace.traceId $ T.unpack url)
+  r <- liftIO $ Wreq.get $ T.unpack url
   -- TODO: This is super fragile. I should at iterate and find the right depature groupings. The first
   -- part appears to be fixed. I'm sure there's some cool Lens shit for this.
   let groupings :: Maybe (Vector.Vector Aeson.Value)
