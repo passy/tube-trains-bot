@@ -1,8 +1,10 @@
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -17,6 +19,7 @@ import Data.Monoid ((<>))
 -- Operator imports
 import Servant ((:>))
 import Control.Lens.Operators ((<&>))
+import Data.Aeson ((.:?))
 
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
@@ -74,7 +77,22 @@ data WebhookParameters = WebhookParameters
   } deriving (Generic, Show)
 
 instance Aeson.FromJSON WebhookParameters where
-  parseJSON = Aeson.genericParseJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
+  parseJSON = Aeson.withObject "parameters" $ \o -> do
+    _direction <- o .:? "direction"
+    _station <- o .:?! "station"
+    _line <- o .:?! "station"
+    return $ WebhookParameters {..}
+
+(.:?!)
+  :: Aeson.Object
+  -> Text
+  -> Aeson.Parser (Maybe Text)
+obj .:?! key =
+  case HMS.lookup key obj of
+    Nothing -> pure Nothing
+    Just "" -> pure Nothing
+    Just v -> Aeson.parseJSON v
+{-# INLINE (.:?!) #-}
 
 data WebhookFulfillment = WebhookFulfillment
   { _speech :: Text
