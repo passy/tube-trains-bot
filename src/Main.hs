@@ -182,25 +182,33 @@ fulfillDepartureReq c wh = do
       in
         return . mkFulfillment $ case HMS.lookup dir d' of
           -- We found departures for the specified direction.
-          Just departures -> formatDepartures dir departures
+          Just departures -> formatDepartures c dir departures
           -- We can't filter by direction, so we'll list them all.
           Nothing ->
-            let go m k v = formatDepartures k v : m
+            let go m k v = formatDepartures c k v : m
                 l = HMS.foldlWithKey' go empty d'
             in T.unwords l
 
-formatDepartures :: Common.Direction -> [Api.Departure] -> Text
-formatDepartures direction ds =
-  let preamble :: Text
-      preamble = "I found the following " <> Common.formatDirection direction <> " departures from Aldgate East: "
+formatDepartures :: Config.Config -> Common.Direction -> [Api.Departure] -> Text
+formatDepartures _ Common.Spellbound [] =
+  "Sorry, there don't seem to be any departures from this station at the moment."
+formatDepartures _ direction [] =
+     "Sorry, there don't seem to be any "
+  <> Common.formatDirection direction
+  <> " departures from this station at the moment."
+formatDepartures c direction ds =
+  let directionTxt :: [Text]
+      directionTxt = if direction == Common.Spellbound then [] else pure (Common.formatDirection direction)
+      preamble :: [Text]
+      preamble = [ "I found the following" ] ++ directionTxt ++ [ "departures from Aldgate East:" ]
       format d = Api.departureLine d
               <> " to "
               <> Api.departureDestination d
               <> " in "
               <> formatSeconds (Api.departureSeconds d)
               <> "."
-      body = format <$> ds
-  in preamble <> T.unwords body
+      body = format <$> take (fromIntegral $ Config.maxDeparturesPerDirection c) ds
+  in T.unwords $ preamble ++ body
 
 formatSeconds :: Int -> Text
 formatSeconds n | n < 60 = "less than a minute"
