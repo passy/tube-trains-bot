@@ -45,20 +45,13 @@ newtype DepartureMap =
   DepartureMap (HMS.HashMap Common.Direction [Departure])
   deriving (Show, Eq)
 
--- | Like `fromMaybe` but providing the default value in the case of an
--- empty argument too.
-fromMayEmpty :: Text -> Maybe Text -> Text
-fromMayEmpty d Nothing = d
-fromMayEmpty d (Just t) | T.null t = d
-                        | otherwise = t
-
 stationUrl :: Format.Format
 stationUrl =
   "https://citymapper.com/api/1/metrodepartures?headways=1&ids={}&region_id=uk-london"
 
 mkUrlForStation :: Config.Config -> Maybe Text -> Text
 mkUrlForStation Config.Config {Config.defaultStation} stationName =
-  let station = fromMayEmpty (toStrict defaultStation) stationName
+  let station = fromMaybe (toStrict defaultStation) stationName
   in toStrict $ Format.format stationUrl (Format.Only station)
 
 loadDeparturesForStation
