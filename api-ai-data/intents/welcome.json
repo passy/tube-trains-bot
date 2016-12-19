@@ -1,0 +1,72 @@
+{
+  "templates": [
+    "What are you?",
+    "How can you help me?",
+    "What can you do?"
+  ],
+  "userSays": [
+    {
+      "id": "b311c7fc-94bd-4020-9921-387ea34140cc",
+      "data": [
+        {
+          "text": "What are you?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "2f8b9654-5270-4e4d-867d-364434447b32",
+      "data": [
+        {
+          "text": "How can you help me?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "10abd500-4f21-4db1-8678-f73127a6276d",
+      "data": [
+        {
+          "text": "What can you do?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    }
+  ],
+  "id": "104088e1-aff5-4abc-91dc-e006580c70e1",
+  "name": "welcome",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "speech": [
+            "Hi, I can tell you about the upcoming Tube departures.",
+            "Hey, ask me about the next trains."
+          ]
+        }
+      ]
+    }
+  ],
+  "priority": 250000,
+  "cortanaCommand": {
+    "navigateOrService": "NAVIGATE",
+    "target": ""
+  },
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": [
+    {
+      "name": "GOOGLE_ASSISTANT_WELCOME"
+    }
+  ]
+}

@@ -1,0 +1,375 @@
+{
+  "templates": [
+    "departures for @line:line  @direction:direction ",
+    "@direction:direction trains from @line:line ",
+    "@direction:direction departures from @station:station on @line:line ",
+    "Give me the departures from @station:station .",
+    "What are departures from @station:station for the @line:line  @direction:direction ?",
+    "What are upcoming departures for the @line:line , @direction:direction ?",
+    "What are upcoming departures for the @line:line ?",
+    "Give me the next departure for @line:line !",
+    "Give me @direction:direction departures for @line:line .",
+    "What are the next departures going @direction:direction on the @line:line ?",
+    "When are the next departures for @line:line  @direction:direction ?",
+    "Tell me about departures.",
+    "Which are the next departures?",
+    "What are the next departures?"
+  ],
+  "userSays": [
+    {
+      "id": "24f60338-44b3-4934-be53-0099cf1c345c",
+      "data": [
+        {
+          "text": "departures for "
+        },
+        {
+          "text": "h and c",
+          "alias": "line",
+          "meta": "@line",
+          "userDefined": false
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "eastbound",
+          "alias": "direction",
+          "meta": "@direction",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 2
+    },
+    {
+      "id": "7f565da1-3a1a-4840-8e57-ff2f4470f322",
+      "data": [
+        {
+          "text": "westbound",
+          "alias": "direction",
+          "meta": "@direction",
+          "userDefined": true
+        },
+        {
+          "text": " trains from "
+        },
+        {
+          "text": "aldgate east",
+          "alias": "line",
+          "meta": "@line",
+          "userDefined": true
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "dae039a4-bb06-47f5-855e-f771bb212f3c",
+      "data": [
+        {
+          "text": "westbound",
+          "alias": "direction",
+          "meta": "@direction",
+          "userDefined": false
+        },
+        {
+          "text": " departures from "
+        },
+        {
+          "text": "aldgate east",
+          "alias": "station",
+          "meta": "@station",
+          "userDefined": false
+        },
+        {
+          "text": " on "
+        },
+        {
+          "text": "hammersmith and city",
+          "alias": "line",
+          "meta": "@line",
+          "userDefined": false
+        },
+        {
+          "text": ""
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "b9368662-c74a-47ce-b286-83d80bea677e",
+      "data": [
+        {
+          "text": "Give me the departures from "
+        },
+        {
+          "text": "Euston Square",
+          "alias": "station",
+          "meta": "@station",
+          "userDefined": false
+        },
+        {
+          "text": "."
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "b44b8a6e-eed9-4d39-85a3-d4dd7cf64c38",
+      "data": [
+        {
+          "text": "What are departures from "
+        },
+        {
+          "text": "Aldgate East",
+          "alias": "station",
+          "meta": "@station",
+          "userDefined": false
+        },
+        {
+          "text": " for the "
+        },
+        {
+          "text": "Hammersmith and City line",
+          "alias": "line",
+          "meta": "@line",
+          "userDefined": false
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "eastbound",
+          "alias": "direction",
+          "meta": "@direction",
+          "userDefined": false
+        },
+        {
+          "text": "?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "c892dbd0-cb9c-4806-a682-531e5efa88f8",
+      "data": [
+        {
+          "text": "What are upcoming departures for the "
+        },
+        {
+          "text": "Hammersmith and City line",
+          "alias": "line",
+          "meta": "@line",
+          "userDefined": false
+        },
+        {
+          "text": ", "
+        },
+        {
+          "text": "east",
+          "alias": "direction",
+          "meta": "@direction",
+          "userDefined": false
+        },
+        {
+          "text": "?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "4f43f91b-0076-487b-aa3f-d2a838f6a7c2",
+      "data": [
+        {
+          "text": "What are upcoming departures for the "
+        },
+        {
+          "text": "Hammersmith and City line",
+          "alias": "line",
+          "meta": "@line",
+          "userDefined": false
+        },
+        {
+          "text": "?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "a3a5db62-ade6-4825-8daa-140afa7ca85f",
+      "data": [
+        {
+          "text": "Give me the next departure for "
+        },
+        {
+          "text": "District",
+          "alias": "line",
+          "meta": "@line",
+          "userDefined": false
+        },
+        {
+          "text": "!"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "95e8ec7e-9989-40ba-a606-156a4817a99d",
+      "data": [
+        {
+          "text": "Give me "
+        },
+        {
+          "text": "eastbound",
+          "alias": "direction",
+          "meta": "@direction",
+          "userDefined": false
+        },
+        {
+          "text": " departures for "
+        },
+        {
+          "text": "Hammersmith and City",
+          "alias": "line",
+          "meta": "@line",
+          "userDefined": false
+        },
+        {
+          "text": "."
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "3cdcfe66-904d-44e6-8cc2-56ca2554d50a",
+      "data": [
+        {
+          "text": "What are the next departures going "
+        },
+        {
+          "text": "west",
+          "alias": "direction",
+          "meta": "@direction",
+          "userDefined": false
+        },
+        {
+          "text": " on the "
+        },
+        {
+          "text": "green line",
+          "alias": "line",
+          "meta": "@line",
+          "userDefined": false
+        },
+        {
+          "text": "?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "fd789250-1d40-4f8e-a592-4750a82a2173",
+      "data": [
+        {
+          "text": "When are the next departures for "
+        },
+        {
+          "text": "h and c",
+          "alias": "line",
+          "meta": "@line",
+          "userDefined": false
+        },
+        {
+          "text": " "
+        },
+        {
+          "text": "west",
+          "alias": "direction",
+          "meta": "@direction",
+          "userDefined": false
+        },
+        {
+          "text": "?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "82d0d057-91c8-4d7c-bf97-f66dc67f1010",
+      "data": [
+        {
+          "text": "Tell me about departures."
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "78bf4042-1040-475c-9ea2-61f6ede2fb0b",
+      "data": [
+        {
+          "text": "Which are the next departures?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "562b80af-c2d7-49b9-af0a-e1bb41d0d7b2",
+      "data": [
+        {
+          "text": "What are the next departures?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    }
+  ],
+  "id": "aef959da-ad17-449d-b8ec-56548336f666",
+  "name": "request-departures",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "list-departures",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "dataType": "@direction",
+          "name": "direction",
+          "value": "$direction"
+        },
+        {
+          "dataType": "@line",
+          "name": "line",
+          "value": "$line"
+        },
+        {
+          "dataType": "@station",
+          "name": "station",
+          "value": "$station"
+        }
+      ],
+      "messages": []
+    }
+  ],
+  "priority": 750000,
+  "cortanaCommand": {
+    "navigateOrService": "NAVIGATE",
+    "target": ""
+  },
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}

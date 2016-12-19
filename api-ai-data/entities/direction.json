@@ -1,0 +1,25 @@
+{
+  "id": "8fe569e3-12d7-43a8-a872-92a3a4e0e42f",
+  "name": "direction",
+  "isOverridable": true,
+  "entries": [
+    {
+      "value": "eastbound",
+      "synonyms": [
+        "eastbound",
+        "east",
+        "eastern"
+      ]
+    },
+    {
+      "value": "westbound",
+      "synonyms": [
+        "westbound",
+        "west",
+        "western"
+      ]
+    }
+  ],
+  "isEnum": false,
+  "automatedExpansion": false
+}

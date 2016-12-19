@@ -1,0 +1,132 @@
+{
+  "templates": [
+    "What are you?",
+    "Tell me who you are.",
+    "Tell me about you.",
+    "Tell me about yourself.",
+    "Who built you?",
+    "Are you a robot?",
+    "Do you run on Haskell?",
+    "What powers you?",
+    "How do you work?"
+  ],
+  "userSays": [
+    {
+      "id": "b24cbd3e-bff6-4a65-99a0-c291277d606e",
+      "data": [
+        {
+          "text": "What are you?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 2
+    },
+    {
+      "id": "46ba2c93-3d91-40cb-ae1b-1bf500b3f148",
+      "data": [
+        {
+          "text": "Tell me who you are."
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "9a7a1af5-6401-4b9e-8d7c-6ca809cb5412",
+      "data": [
+        {
+          "text": "Tell me about you."
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "f1d20ea3-3914-492c-894f-c738bb1874da",
+      "data": [
+        {
+          "text": "Tell me about yourself."
+        }
+      ],
+      "isTemplate": false,
+      "count": 1
+    },
+    {
+      "id": "111adbb8-7b7f-4f6b-acba-d06f68285b6e",
+      "data": [
+        {
+          "text": "Who built you?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "d91fa9c6-35e4-4fa3-b45e-6f1ea5ad2d92",
+      "data": [
+        {
+          "text": "Are you a robot?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "f1d89bfc-1392-4394-b1be-a3fcf2db420f",
+      "data": [
+        {
+          "text": "Do you run on Haskell?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "c98d2add-4878-426e-b879-f29b0472569f",
+      "data": [
+        {
+          "text": "What powers you?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "4b5cee23-4cf8-49c3-81fa-8363ca578b2e",
+      "data": [
+        {
+          "text": "How do you work?"
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    }
+  ],
+  "id": "2f1aab7d-e5af-4348-8a13-6af43cb4d38e",
+  "name": "about",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "about",
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "speech": []
+        }
+      ]
+    }
+  ],
+  "priority": 500000,
+  "cortanaCommand": {
+    "navigateOrService": "NAVIGATE",
+    "target": ""
+  },
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}

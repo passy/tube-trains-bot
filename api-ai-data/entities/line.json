@@ -1,0 +1,30 @@
+{
+  "id": "7a7c3df6-e0de-451b-88c1-0da4ff581690",
+  "name": "line",
+  "isOverridable": true,
+  "entries": [
+    {
+      "value": "HammersmithAndCity",
+      "synonyms": [
+        "hammersmith and city",
+        "h and c",
+        "hammersmith",
+        "hammersmith and city line",
+        "h and c line",
+        "pink line",
+        "pink"
+      ]
+    },
+    {
+      "value": "District",
+      "synonyms": [
+        "district",
+        "district line",
+        "green line",
+        "green"
+      ]
+    }
+  ],
+  "isEnum": false,
+  "automatedExpansion": true
+}

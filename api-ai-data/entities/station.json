@@ -1,0 +1,30 @@
+{
+  "id": "2a3e9d57-0184-4ac9-b413-0814ed29946a",
+  "name": "station",
+  "isOverridable": true,
+  "entries": [
+    {
+      "value": "AldgateEast",
+      "synonyms": [
+        "AldgateEast",
+        "aldgate east"
+      ]
+    },
+    {
+      "value": "Aldgate",
+      "synonyms": [
+        "aldgate"
+      ]
+    },
+    {
+      "value": "EustonSquare",
+      "synonyms": [
+        "EustonSquare",
+        "esquare",
+        "euston square"
+      ]
+    }
+  ],
+  "isEnum": false,
+  "automatedExpansion": true
+}
