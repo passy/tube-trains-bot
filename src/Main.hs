@@ -70,7 +70,6 @@ data WebhookResult = WebhookResult
 instance Aeson.FromJSON WebhookResult where
   parseJSON = Aeson.genericParseJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
 
--- TODO: Figure out if we can easily turn those into `Nothing` if they're empty.
 data WebhookParameters = WebhookParameters
   { _direction :: Maybe Common.Direction
   , _station :: Maybe Text
@@ -82,7 +81,7 @@ instance Aeson.FromJSON WebhookParameters where
     _direction <- o .:? "direction"
     _station <- o .:?! "station"
     _line <- o .:?! "station"
-    return $ WebhookParameters {..}
+    return WebhookParameters{..}
 
 (.:?!)
   :: Aeson.Object
@@ -125,7 +124,7 @@ server c = postWebhookH
   -- This isn't a great Monad to work in. I want better error handling.
   where postWebhookH :: MonadIO m => WebhookRequest -> m WebhookFulfillment
         postWebhookH wh =
-          case (_action . _result $ wh) of
+          case _action . _result $ wh of
             ActionListDepartures -> listDeparturesH wh
             ActionAbout -> aboutH
             ActionUndefined -> undefinedH
@@ -144,7 +143,7 @@ server c = postWebhookH
           <> "."
 
         undefinedH :: Monad m => m WebhookFulfillment
-        undefinedH = pure $ mkFulfillment $ "Sorry, I don't know how to help with that."
+        undefinedH = pure $ mkFulfillment "Sorry, I don't know how to help with that."
 
 fulfillDepartureReq
   :: (MonadIO m, Ex.MonadError FulfillmentError m)
@@ -202,7 +201,7 @@ formatDepartures c direction ds =
       directionTxt = if direction == Common.Spellbound then [] else pure (Common.formatDirection direction)
       preamble :: [Text]
       preamble = [ "I found the following" ] ++ directionTxt ++ [ "departures from Aldgate East:" ]
-      format d = Api.departureLine d
+      format d = unCamelCase (Api.departureLine d)
               <> " to "
               <> Api.departureDestination d
               <> " in "
