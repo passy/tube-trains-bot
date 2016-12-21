@@ -21,11 +21,12 @@ import Servant ((:>))
 import Control.Lens.Operators ((<&>))
 import Data.Aeson ((.:?))
 
+import qualified Control.Monad.Except as Ex
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
+import qualified Data.Char as Char
 import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
-import qualified Control.Monad.Except as Ex
 import qualified Network.Wai.Handler.Warp as Warp
 import qualified Servant
 
@@ -214,6 +215,20 @@ formatSeconds :: Int -> Text
 formatSeconds n | n < 60 = "less than a minute"
                 | n <= 90 = show n <> " seconds"
                 | otherwise = show (quot n 60) <> " minutes"
+
+-- | Turn a camel-cased string into a whitespace separted string.
+-- Does manual unpacking and repacking, because I'm a terrible
+-- programmer, hence very inefficient.
+--
+-- >>> unCamelCase "HammersmithAndCity"
+-- "Hammersmith And City"
+-- >>> unCamelCase "MyURIParser"
+-- "My URI Parser"
+unCamelCase :: Text -> Text
+unCamelCase = T.pack . go . T.unpack
+  where go (c:d:cs) | Char.isUpper d && not (Char.isUpper c) = c : ' ' : go (d:cs)
+                    | otherwise = c : go (d:cs)
+        go cs = cs
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
