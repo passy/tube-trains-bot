@@ -9,7 +9,6 @@ RUN apt-get install -y curl && mkdir -p /srv
 RUN curl -L https://github.com/passy/tube-roundel/releases/download/$PROGVERSION/tube-roundel.lnx64.tar.bz2 | tar -C /srv -xjvf - tube-roundel
 
 COPY .stack-work/install/x86_64-linux/$STACKAGE/$GHC/bin/tube-bot-fulfillment /srv/
-COPY bot.dhall /srv/bot.dhall
 WORKDIR /srv
 EXPOSE 8001
 ENTRYPOINT ["/srv/tube-roundel"]
