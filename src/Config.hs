@@ -22,4 +22,4 @@ data Config = Config
   } deriving (Generic, Show, Dhall.Interpret)
 
 loadConfig :: IO Config
-loadConfig = Dhall.input Dhall.auto "./bot.dhall"
+loadConfig = Dhall.input Dhall.auto "./config/bot.dhall"
