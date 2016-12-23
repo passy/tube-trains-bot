@@ -202,7 +202,7 @@ formatDepartures c direction ds =
       preamble :: [Text]
       preamble = [ "I found the following" ] ++ directionTxt ++ [ "departures from Aldgate East:" ]
       format d = unCamelCase (Api.departureLine d)
-              <> " to "
+              <> " line to "
               <> Api.departureDestination d
               <> " in "
               <> formatSeconds (Api.departureSeconds d)
