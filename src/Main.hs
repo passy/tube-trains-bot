@@ -180,11 +180,12 @@ fulfillDepartureReq c wh = do
       -- Filter by line if filter is provided
       let d' = HMS.mapMaybe (maybe pure filterLine mline) d
       in
-        return . mkFulfillment $ case HMS.lookup dir d' of
+        return . mkFulfillment $ case (null d', HMS.lookup dir d') of
+          (True, _) -> "I could not find any departures for the given parameters."
           -- We found departures for the specified direction.
-          Just departures -> formatDepartures c dir departures
+          (False, Just departures) -> formatDepartures c dir departures
           -- We can't filter by direction, so we'll list them all.
-          Nothing ->
+          (False, Nothing) ->
             let go m k v = formatDepartures c k v : m
                 l = HMS.foldlWithKey' go empty d'
             in T.unwords l
