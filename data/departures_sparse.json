@@ -1,0 +1,34 @@
+{
+  "id": "9b24b565-7548-4566-9bb1-3696a1c55a6d",
+  "timestamp": "2016-12-23T23:43:24.537Z",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "Give me departures from Aldgate East",
+    "action": "list-departures",
+    "actionIncomplete": false,
+    "parameters": {
+      "direction": "",
+      "line": "",
+      "station": "AldgateEast"
+    },
+    "contexts": [],
+    "metadata": {
+      "intentId": "aef959da-ad17-449d-b8ec-56548336f666",
+      "webhookUsed": "true",
+      "webhookForSlotFillingUsed": "false",
+      "intentName": "request-departures"
+    },
+    "fulfillment": {
+      "speech": "",
+      "source": "tube-bot-fulfillment",
+      "displayText": "",
+      "messages": []
+    },
+    "score": 1
+  },
+  "status": {
+    "code": 200,
+    "errorType": "success"
+  },
+  "sessionId": "b21499b1-6db1-43ae-9fd6-fd714a5d331d"
+}
