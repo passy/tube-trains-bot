@@ -80,7 +80,7 @@ instance Aeson.FromJSON WebhookParameters where
   parseJSON = Aeson.withObject "parameters" $ \o -> do
     _direction <- o .:? "direction"
     _station <- o .:?! "station"
-    _line <- o .:?! "station"
+    _line <- o .:?! "line"
     return WebhookParameters{..}
 
 (.:?!)
