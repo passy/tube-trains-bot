@@ -6,7 +6,7 @@ ARG STACKAGE=lts-7.4
 ARG GHC=8.0.1
 
 RUN mkdir -p /srv
-COPY .stack-work/install/x86_64-linux/$STACKAGE/$GHC/bin/tube-bot-fulfillment /srv/
+COPY build-static/tube-bot-fulfillment
 WORKDIR /srv
 EXPOSE 8001
 ENTRYPOINT ["/srv/tube-roundel"]
