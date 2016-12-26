@@ -1,0 +1,31 @@
+{
+  "id": "15c3b21f-6599-4e35-bf0b-83cf167bbaf3",
+  "timestamp": "2016-12-25T12:17:22.334Z",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "What's powering you?",
+    "action": "about",
+    "actionIncomplete": false,
+    "parameters": {},
+    "contexts": [],
+    "metadata": {
+      "intentId": "2f1aab7d-e5af-4348-8a13-6af43cb4d38e",
+      "webhookUsed": "true",
+      "webhookForSlotFillingUsed": "false",
+      "intentName": "about"
+    },
+    "fulfillment": {
+      "speech": "I'm Passy's Tube Bot version 0.1.0.0, running on the Glorious Haskell Compiler version 8.0.0.",
+      "source": "tube-bot-fulfillment",
+      "displayText": "I'm Passy's Tube Bot version 0.1.0.0, running on the Glorious Haskell Compiler version 8.0.0.",
+      "messages": [
+        {
+          "type": 0,
+          "speech": "I'm Passy's Tube Bot version 0.1.0.0, running on the Glorious Haskell Compiler version 8.0.0."
+        }
+      ]
+    },
+    "score": 0.5
+  },
+  "sessionId": "b21499b1-6db1-43ae-9fd6-fd714a5d331d"
+}
