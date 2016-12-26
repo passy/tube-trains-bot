@@ -8,7 +8,7 @@ def main(filename):
     with open(filename, 'r') as fp:
         with open(filename + ".csv", 'w') as op:
             f = json.load(fp)
-            writer = csv.writer(op)
+            writer = csv.writer(op, dialect='unix')
             for r in f['elements']:
                 writer.writerow([r['id'], r['name']])
 

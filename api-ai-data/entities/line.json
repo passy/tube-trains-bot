@@ -23,8 +23,98 @@
         "green line",
         "green"
       ]
+    },
+    {
+      "value": "Northern",
+      "synonyms": [
+        "Northern",
+        "black",
+        "black line",
+        "northern line"
+      ]
+    },
+    {
+      "value": "Metropolitan",
+      "synonyms": [
+        "Metropolitan",
+        "purple",
+        "purple line"
+      ]
+    },
+    {
+      "value": "Bakerloo",
+      "synonyms": [
+        "Bakerloo",
+        "brown",
+        "brown line"
+      ]
+    },
+    {
+      "value": "Piccadilly",
+      "synonyms": [
+        "Piccadilly",
+        "blue",
+        "dark blue",
+        "blue line",
+        "dark blue line"
+      ]
+    },
+    {
+      "value": "Victoria",
+      "synonyms": [
+        "Victoria",
+        "light blue",
+        "light blue line"
+      ]
+    },
+    {
+      "value": "Central",
+      "synonyms": [
+        "Central",
+        "red",
+        "red line"
+      ]
+    },
+    {
+      "value": "WaterlooAndCity",
+      "synonyms": [
+        "WaterlooAndCity",
+        "waterloo",
+        "waterloo line",
+        "waterloo and city line"
+      ]
+    },
+    {
+      "value": "Circle",
+      "synonyms": [
+        "Circle",
+        "yellow",
+        "yellow line",
+        "circle line"
+      ]
+    },
+    {
+      "value": "Jubilee",
+      "synonyms": [
+        "Jubilee"
+      ]
+    },
+    {
+      "value": "Overground",
+      "synonyms": [
+        "Overground",
+        "orange",
+        "orange line"
+      ]
+    },
+    {
+      "value": "DLR",
+      "synonyms": [
+        "DLR",
+        "dockland"
+      ]
     }
   ],
   "isEnum": false,
-  "automatedExpansion": true
+  "automatedExpansion": false
 }

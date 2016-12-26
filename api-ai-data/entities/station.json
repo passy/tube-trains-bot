@@ -23,6 +23,590 @@
         "esquare",
         "euston square"
       ]
+    },
+    {
+      "value": "LondonBridge",
+      "synonyms": [
+        "LondonBridge",
+        "london bridge",
+        "lbridge"
+      ]
+    },
+    {
+      "value": "Angel",
+      "synonyms": [
+        "Angel"
+      ]
+    },
+    {
+      "value": "BakerStreet",
+      "synonyms": [
+        "Baker Street"
+      ]
+    },
+    {
+      "value": "Bank",
+      "synonyms": [
+        "Bank"
+      ]
+    },
+    {
+      "value": "Barbican",
+      "synonyms": [
+        "Barbican"
+      ]
+    },
+    {
+      "value": "BaronsCourt",
+      "synonyms": [
+        "Barons Court"
+      ]
+    },
+    {
+      "value": "Bayswater",
+      "synonyms": [
+        "Bayswater"
+      ]
+    },
+    {
+      "value": "BelsizePark",
+      "synonyms": [
+        "Belsize Park"
+      ]
+    },
+    {
+      "value": "Bermondsey",
+      "synonyms": [
+        "Bermondsey"
+      ]
+    },
+    {
+      "value": "BethnalGreen",
+      "synonyms": [
+        "Bethnal Green"
+      ]
+    },
+    {
+      "value": "Blackfriars",
+      "synonyms": [
+        "Blackfriars"
+      ]
+    },
+    {
+      "value": "BondStreet",
+      "synonyms": [
+        "Bond Street"
+      ]
+    },
+    {
+      "value": "Borough",
+      "synonyms": [
+        "Borough"
+      ]
+    },
+    {
+      "value": "Brixton",
+      "synonyms": [
+        "Brixton"
+      ]
+    },
+    {
+      "value": "CaledonianRoad",
+      "synonyms": [
+        "Caledonian Road"
+      ]
+    },
+    {
+      "value": "CamdenTown",
+      "synonyms": [
+        "Camden Town"
+      ]
+    },
+    {
+      "value": "CanadaWater",
+      "synonyms": [
+        "Canada Water"
+      ]
+    },
+    {
+      "value": "CannonStreet",
+      "synonyms": [
+        "Cannon Street"
+      ]
+    },
+    {
+      "value": "ChalkFarm",
+      "synonyms": [
+        "Chalk Farm"
+      ]
+    },
+    {
+      "value": "ChanceryLane",
+      "synonyms": [
+        "Chancery Lane"
+      ]
+    },
+    {
+      "value": "CharingCross",
+      "synonyms": [
+        "Charing Cross"
+      ]
+    },
+    {
+      "value": "ClaphamCommon",
+      "synonyms": [
+        "Clapham Common"
+      ]
+    },
+    {
+      "value": "ClaphamNorth",
+      "synonyms": [
+        "Clapham North"
+      ]
+    },
+    {
+      "value": "ClaphamSouth",
+      "synonyms": [
+        "Clapham South"
+      ]
+    },
+    {
+      "value": "CoventGarden",
+      "synonyms": [
+        "Covent Garden"
+      ]
+    },
+    {
+      "value": "EarlsCourt",
+      "synonyms": [
+        "Earl\u0027s Court"
+      ]
+    },
+    {
+      "value": "EdgwareRoadB",
+      "synonyms": [
+        "Edgware Road"
+      ]
+    },
+    {
+      "value": "EdgwareRoadCDH",
+      "synonyms": [
+        "Edgware Road"
+      ]
+    },
+    {
+      "value": "ElephantAndCastle",
+      "synonyms": [
+        "Elephant \u0026 Castle"
+      ]
+    },
+    {
+      "value": "Embankment",
+      "synonyms": [
+        "Embankment"
+      ]
+    },
+    {
+      "value": "Euston",
+      "synonyms": [
+        "Euston"
+      ]
+    },
+    {
+      "value": "Farringdon",
+      "synonyms": [
+        "Farringdon"
+      ]
+    },
+    {
+      "value": "FulhamBroadway",
+      "synonyms": [
+        "Fulham Broadway"
+      ]
+    },
+    {
+      "value": "GloucesterRoad",
+      "synonyms": [
+        "Gloucester Road"
+      ]
+    },
+    {
+      "value": "GoodgeStreet",
+      "synonyms": [
+        "Goodge Street"
+      ]
+    },
+    {
+      "value": "GreatPortlandStreet",
+      "synonyms": [
+        "Great Portland Street"
+      ]
+    },
+    {
+      "value": "GreenPark",
+      "synonyms": [
+        "Green Park"
+      ]
+    },
+    {
+      "value": "HighStreetKensington",
+      "synonyms": [
+        "High Street Kensington"
+      ]
+    },
+    {
+      "value": "HighburyAndIslington",
+      "synonyms": [
+        "Highbury \u0026 Islington"
+      ]
+    },
+    {
+      "value": "Holborn",
+      "synonyms": [
+        "Holborn"
+      ]
+    },
+    {
+      "value": "HollandPark",
+      "synonyms": [
+        "Holland Park"
+      ]
+    },
+    {
+      "value": "HollowayRoad",
+      "synonyms": [
+        "Holloway Road"
+      ]
+    },
+    {
+      "value": "HydeParkCorner",
+      "synonyms": [
+        "Hyde Park Corner"
+      ]
+    },
+    {
+      "value": "Kennington",
+      "synonyms": [
+        "Kennington"
+      ]
+    },
+    {
+      "value": "KensingtonOlympia",
+      "synonyms": [
+        "Kensington Olympia"
+      ]
+    },
+    {
+      "value": "KentishTown",
+      "synonyms": [
+        "Kentish Town"
+      ]
+    },
+    {
+      "value": "KilburnPark",
+      "synonyms": [
+        "Kilburn Park"
+      ]
+    },
+    {
+      "value": "KingsCrossStPancras",
+      "synonyms": [
+        "King\u0027s Cross St. Pancras"
+      ]
+    },
+    {
+      "value": "Knightsbridge",
+      "synonyms": [
+        "Knightsbridge"
+      ]
+    },
+    {
+      "value": "LadbrokeGrove",
+      "synonyms": [
+        "Ladbroke Grove"
+      ]
+    },
+    {
+      "value": "LambethNorth",
+      "synonyms": [
+        "Lambeth North"
+      ]
+    },
+    {
+      "value": "LancasterGate",
+      "synonyms": [
+        "Lancaster Gate"
+      ]
+    },
+    {
+      "value": "LeicesterSquare",
+      "synonyms": [
+        "Leicester Square"
+      ]
+    },
+    {
+      "value": "LiverpoolStreet",
+      "synonyms": [
+        "Liverpool Street"
+      ]
+    },
+    {
+      "value": "MaidaVale",
+      "synonyms": [
+        "Maida Vale"
+      ]
+    },
+    {
+      "value": "MansionHouse",
+      "synonyms": [
+        "Mansion House"
+      ]
+    },
+    {
+      "value": "MarbleArch",
+      "synonyms": [
+        "Marble Arch"
+      ]
+    },
+    {
+      "value": "Marylebone",
+      "synonyms": [
+        "Marylebone"
+      ]
+    },
+    {
+      "value": "Monument",
+      "synonyms": [
+        "Monument"
+      ]
+    },
+    {
+      "value": "Moorgate",
+      "synonyms": [
+        "Moorgate"
+      ]
+    },
+    {
+      "value": "MorningtonCrescent",
+      "synonyms": [
+        "Mornington Crescent"
+      ]
+    },
+    {
+      "value": "NottingHillGate",
+      "synonyms": [
+        "Notting Hill Gate"
+      ]
+    },
+    {
+      "value": "OldStreet",
+      "synonyms": [
+        "Old Street"
+      ]
+    },
+    {
+      "value": "Oval",
+      "synonyms": [
+        "Oval"
+      ]
+    },
+    {
+      "value": "OxfordCircus",
+      "synonyms": [
+        "Oxford Circus"
+      ]
+    },
+    {
+      "value": "PaddingtonBCD",
+      "synonyms": [
+        "Paddington"
+      ]
+    },
+    {
+      "value": "PaddingtonCH",
+      "synonyms": [
+        "Paddington"
+      ]
+    },
+    {
+      "value": "ParsonsGreen",
+      "synonyms": [
+        "Parsons Green"
+      ]
+    },
+    {
+      "value": "PiccadillyCircus",
+      "synonyms": [
+        "Piccadilly Circus"
+      ]
+    },
+    {
+      "value": "Pimlico",
+      "synonyms": [
+        "Pimlico"
+      ]
+    },
+    {
+      "value": "Queensway",
+      "synonyms": [
+        "Queensway"
+      ]
+    },
+    {
+      "value": "RegentsPark",
+      "synonyms": [
+        "Regent\u0027s Park"
+      ]
+    },
+    {
+      "value": "RoyalOak",
+      "synonyms": [
+        "Royal Oak"
+      ]
+    },
+    {
+      "value": "RussellSquare",
+      "synonyms": [
+        "Russell Square"
+      ]
+    },
+    {
+      "value": "SloaneSquare",
+      "synonyms": [
+        "Sloane Square"
+      ]
+    },
+    {
+      "value": "SouthKensington",
+      "synonyms": [
+        "South Kensington"
+      ]
+    },
+    {
+      "value": "Southwark",
+      "synonyms": [
+        "Southwark"
+      ]
+    },
+    {
+      "value": "StJamessPark",
+      "synonyms": [
+        "St. James\u0027s Park"
+      ]
+    },
+    {
+      "value": "StJohnsWood",
+      "synonyms": [
+        "St. John\u0027s Wood"
+      ]
+    },
+    {
+      "value": "StPauls",
+      "synonyms": [
+        "St. Paul\u0027s"
+      ]
+    },
+    {
+      "value": "StepneyGreen",
+      "synonyms": [
+        "Stepney Green"
+      ]
+    },
+    {
+      "value": "Stockwell",
+      "synonyms": [
+        "Stockwell"
+      ]
+    },
+    {
+      "value": "SwissCottage",
+      "synonyms": [
+        "Swiss Cottage"
+      ]
+    },
+    {
+      "value": "Temple",
+      "synonyms": [
+        "Temple"
+      ]
+    },
+    {
+      "value": "TottenhamCourtRoad",
+      "synonyms": [
+        "Tottenham Court Road"
+      ]
+    },
+    {
+      "value": "TowerHill",
+      "synonyms": [
+        "Tower Hill"
+      ]
+    },
+    {
+      "value": "TufnellPark",
+      "synonyms": [
+        "Tufnell Park"
+      ]
+    },
+    {
+      "value": "Vauxhall",
+      "synonyms": [
+        "Vauxhall"
+      ]
+    },
+    {
+      "value": "Victoria",
+      "synonyms": [
+        "Victoria"
+      ]
+    },
+    {
+      "value": "WarrenStreet",
+      "synonyms": [
+        "Warren Street"
+      ]
+    },
+    {
+      "value": "WarwickAvenue",
+      "synonyms": [
+        "Warwick Avenue"
+      ]
+    },
+    {
+      "value": "Waterloo",
+      "synonyms": [
+        "Waterloo"
+      ]
+    },
+    {
+      "value": "WestBrompton",
+      "synonyms": [
+        "West Brompton"
+      ]
+    },
+    {
+      "value": "WestKensington",
+      "synonyms": [
+        "West Kensington"
+      ]
+    },
+    {
+      "value": "WestbournePark",
+      "synonyms": [
+        "Westbourne Park"
+      ]
+    },
+    {
+      "value": "Westminster",
+      "synonyms": [
+        "Westminster"
+      ]
+    },
+    {
+      "value": "Whitechapel",
+      "synonyms": [
+        "Whitechapel"
+      ]
     }
   ],
   "isEnum": false,
