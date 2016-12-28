@@ -27,6 +27,7 @@ dependencies:
   - aeson
   - bytestring
   - dhall
+  - free
   - hashable
   - lens
   - lens-aeson

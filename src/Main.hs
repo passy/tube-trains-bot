@@ -1,16 +1,17 @@
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE TypeApplications #-}
 
 module Main where
 
@@ -23,6 +24,7 @@ import Control.Lens.Operators ((<&>))
 import Data.Aeson ((.:?))
 
 import qualified Control.Monad.Except as Ex
+import qualified Control.Monad.Free as Free
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
 import qualified Data.Char as Char
@@ -108,7 +110,9 @@ mkFulfillment :: Text -> WebhookFulfillment
 mkFulfillment text = WebhookFulfillment text text "tube-bot-fulfillment"
 
 -- API specification
-type Api = "webhook" :> Servant.ReqBody '[Servant.JSON] WebhookRequest :> Servant.Post '[Servant.JSON] WebhookFulfillment
+type Api = "webhook"
+           :> Servant.ReqBody '[Servant.JSON] WebhookRequest
+           :> Servant.Post '[Servant.JSON] WebhookFulfillment
 
 testApi :: Proxy Api
 testApi = Proxy
@@ -230,6 +234,30 @@ unCamelCase = T.pack . go . T.unpack
   where go (c:d:cs) | Char.isUpper d && not (Char.isUpper c) = c : ' ' : go (d:cs)
                     | otherwise = c : go (d:cs)
         go cs = cs
+
+-- * Fulfillment response combinators
+
+data Result = Successful | Unsuccessful Text
+  deriving Show
+
+data FResponse r =
+    FPreamble Result r
+  | FDeparture Common.Direction Api.Departure r
+  | FNil
+  deriving (Show, Functor)
+
+preamble
+  :: Free.MonadFree ((->) r) m
+  => Result
+  -> m (FResponse r)
+preamble = Free.liftF . FPreamble
+
+departure
+  :: Free.MonadFree ((->) r) m
+  => Common.Direction
+  -> Api.Departure
+  -> m (FResponse r)
+departure = (Free.liftF .) . FDeparture
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
