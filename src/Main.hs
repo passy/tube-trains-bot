@@ -14,6 +14,8 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Main where
 
@@ -312,7 +314,6 @@ runServer c = Warp.run (fromIntegral $ Config.port c) (app c)
 -- Put this all to work!
 main :: IO ()
 main = do
-  print . runResponse $ exampleProc
-  -- config <- Config.loadConfig
-  -- putStrLn @Text $ "Starting server at http://localhost:" <> show (Config.port config) <> " ..."
-  -- runServer config
+  config <- Config.loadConfig
+  putStrLn @Text $ "Starting server at http://localhost:" <> show (Config.port config) <> " ..."
+  runServer config
