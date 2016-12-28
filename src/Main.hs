@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveFunctor #-}
@@ -14,8 +12,6 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE TypeApplications #-}
 
 module Main where
 
@@ -30,8 +26,6 @@ import Control.Lens.Operators ((<&>), (?=), (<>~))
 import Control.Lens.TH (makeLenses)
 import Data.Aeson ((.:?))
 
-import qualified Control.Monad.Except as Ex
-import qualified Control.Monad.State.Strict as State
 import qualified Control.Monad.Free as Free
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
