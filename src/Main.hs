@@ -10,6 +10,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Main where
 
@@ -245,5 +246,5 @@ runTestServer c = Warp.run (fromIntegral $ Config.port c) (app c)
 main :: IO ()
 main = do
   config <- Config.loadConfig
-  putStrLn ("Starting server at http://localhost:" <> show (Config.port config) <> " ..." :: Text)
+  putStrLn @Text $ "Starting server at http://localhost:" <> show (Config.port config) <> " ..."
   runTestServer config
