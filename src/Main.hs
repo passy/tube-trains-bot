@@ -1,5 +1,3 @@
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveFunctor #-}
@@ -7,13 +5,16 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Main where
 
@@ -271,17 +272,44 @@ data ResponseState = ResponseState
   { _sError :: Maybe Text
   , _sStation :: Maybe Text
   , _sDepartures :: Api.DepartureMap
-  , _sPointOfDeparture :: Maybe Text }
+  , _sDirection :: Common.Direction }
   deriving (Show)
 
 makeLenses ''ResponseState
 
 instance Def.Default ResponseState where
-  def = ResponseState mempty mempty mempty mempty
+  def = ResponseState mempty mempty mempty Common.Spellbound
 
 runResponse :: Response () -> WebhookFulfillment
-runResponse res = go $ (State.execState (interpResponse res) Def.def)
-  where go (s@ResponseState{..}) = mkFulfillment $ show s
+runResponse res = format $ State.execState (interpResponse res) Def.def
+  where
+    format (state'@ResponseState{_sError}) =
+      case _sError of
+        Just err -> mkFulfillment err
+        Nothing -> formatSuccess state'
+
+    formatDepartures :: Api.DepartureMap -> Text
+    formatDepartures = undefined
+
+    formatSuccess (ResponseState{..}) =
+      let preamble = case (null _sDepartures, _sStation, _sDirection) of
+              (True, Just station, Common.Spellbound) ->
+                   "My apologies, but there don't seem to be any departures from "
+                <> station <> " at all right now."
+              (True, Just station, dir) ->
+                   "My apologies, but I couldn't find any upcoming "
+                <> Common.formatDirection dir
+                <> " departures from "
+                <> station <> " at this time."
+              (False, Just station, Common.Spellbound) ->
+                   "I found the following departures from " <> station <> "."
+              (False, Just station, dir) ->
+                   "I found the following "
+                <> Common.formatDirection dir
+                <> " departures from " <> station <> "."
+              (_, Nothing, _) ->
+                   "I'm absolutely devo'd but something with the request went wrong."
+      in mkFulfillment preamble
 
 interpResponse :: Response () -> State.State ResponseState ()
 interpResponse (Free.Free (AbortF err)) = sError ?= err
