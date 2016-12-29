@@ -5,7 +5,7 @@
 module Api
   ( loadDeparturesForStation
   , Departure(..)
-  , DepartureMap(..)
+  , DepartureMap
   ) where
 
 import Protolude
@@ -38,9 +38,7 @@ instance Aeson.FromJSON Departure where
                       <*> o .: "destination_name"
                       <*> o .: "time_seconds"
 
-newtype DepartureMap =
-  DepartureMap (HMS.HashMap Common.Direction [Departure])
-  deriving (Show, Eq)
+type DepartureMap = (HMS.HashMap Common.Direction [Departure])
 
 stationUrl :: Format.Format
 stationUrl =
@@ -70,7 +68,7 @@ loadDeparturesForStation config stationName = do
            . _Array
       departures :: Maybe (Vector.Vector (Common.Direction, [Departure]))
       departures = sequence =<< fmap extractDepartures' <$> groupings
-  return $ DepartureMap . HMS.fromList . Vector.toList <$> departures
+  return $ HMS.fromList . Vector.toList <$> departures
   where
     extractDepartures :: Aeson.Value -> Aeson.Parser (Common.Direction, [Departure])
     extractDepartures = Aeson.withObject "departure" $ \o -> (,) <$> o .: "direction_name" <*> o .: "departures"

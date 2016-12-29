@@ -26,6 +26,7 @@ dependencies:
   - base >= 4.7 && < 5
   - aeson
   - bytestring
+  - data-default
   - dhall
   - free
   - hashable
