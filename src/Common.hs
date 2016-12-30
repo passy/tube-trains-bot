@@ -6,6 +6,9 @@
 
 module Common
   ( Direction(..)
+  , FulfillmentError(..)
+  , WebhookFulfillment(..)
+  , mkFulfillment
   , formatDirection
   ) where
 
@@ -37,3 +40,21 @@ instance Aeson.FromJSON Direction where
 -- | Format a Direction to be read out or sent to a user.
 formatDirection :: Direction -> Text
 formatDirection = show
+
+-- | Wraps a text that is sent to the user in case of an error and might be logged
+-- separately.
+newtype FulfillmentError = FulfillmentError Text
+  deriving (Show)
+
+-- | The data type to return to API.ai which is currently speech-only.
+data WebhookFulfillment = WebhookFulfillment
+  { _speech :: Text
+  , _displayText :: Text
+  , _source :: Text
+  } deriving (Generic, Show)
+
+instance Aeson.ToJSON WebhookFulfillment where
+  toJSON = Aeson.genericToJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
+
+mkFulfillment :: Text -> WebhookFulfillment
+mkFulfillment text = WebhookFulfillment text text "tube-bot-fulfillment"
