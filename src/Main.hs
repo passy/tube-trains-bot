@@ -36,6 +36,7 @@ import qualified Data.Char as Char
 import qualified Data.Default as Def
 import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
+import qualified Data.Maybe as Maybe
 import qualified Network.Wai.Handler.Warp as Warp
 import qualified Servant
 
@@ -58,6 +59,7 @@ instance Aeson.FromJSON WebhookRequest where
 -- | Wraps a text that is sent to the user in case of an error and might be logged
 -- separately.
 newtype FulfillmentError = FulfillmentError Text
+  deriving (Show)
 
 data WebhookAction
   = ActionListDepartures
@@ -78,7 +80,6 @@ data WebhookResult = WebhookResult
 
 instance Aeson.FromJSON WebhookResult where
   parseJSON = Aeson.genericParseJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
-
 
 data WebhookParameters = WebhookParameters
   { _direction :: Maybe Common.Direction
@@ -121,8 +122,8 @@ type Api = "webhook"
            :> Servant.ReqBody '[Servant.JSON] WebhookRequest
            :> Servant.Post '[Servant.JSON] WebhookFulfillment
 
-testApi :: Proxy Api
-testApi = Proxy
+api :: Proxy Api
+api = Proxy
 
 -- Server-side handlers.
 --
@@ -157,50 +158,63 @@ server c = postWebhookH
         undefinedH :: Monad m => m WebhookFulfillment
         undefinedH = pure $ mkFulfillment "Sorry, I don't know how to help with that."
 
+whenIsJust
+  :: Monad m
+  => Maybe a -> (a -> m ()) -> m ()
+whenIsJust (Just x) f = f x
+whenIsJust Nothing _ = return ()
+
 fulfillDepartureReq
+  -- TODO: Reconsider using MonadError
   :: (MonadIO m, Ex.MonadError FulfillmentError m)
   => Config.Config
   -> WebhookRequest
   -> m WebhookFulfillment
 fulfillDepartureReq c wh = do
   let params = _parameters . _result $ wh
-  let dir = fromMaybe Common.Spellbound $ _direction params
-  let line = _line params
-  let station = _station params
-  res <- Api.loadDeparturesForStation c station
-  case res of
-    Just res' -> filterDepartures dir line res'
-    Nothing -> Ex.throwError $ FulfillmentError "Sorry, I couldn't find any trains right now."
-  where
-    filterLine
-      :: Text
-      -> [Api.Departure]
-      -> Maybe [Api.Departure]
-    filterLine line ds =
-      let res = filter (\d -> Api.departureLine d == line) ds
-      in if null res
-           then Nothing
-           else Just res
+  let dir' = fromMaybe Common.Spellbound $ _direction params
+  let station' = _station params
+  res <- Api.loadDeparturesForStation c station'
 
-    filterDepartures
-      :: (Ex.MonadError FulfillmentError m)
-      => Common.Direction
-      -> Maybe Text
-      -> Api.DepartureMap
-      -> m WebhookFulfillment
-    filterDepartures dir mline d =
-      -- Filter by line if filter is provided
-      let d' = HMS.mapMaybe (maybe pure filterLine mline) d
-      in
-        return . mkFulfillment $ case (null d', HMS.lookup dir d') of
-          (True, _) -> "I could not find any departures for the given parameters."
-          -- We found departures for the specified direction.
-          (False, Just departures) -> formatDepartures c dir departures
-          -- We can't filter by direction, so we'll list them all.
-          (False, Nothing) ->
-            let go m k v = formatDepartures c k v : m
-                l = HMS.foldlWithKey' go empty d'
-            in T.unwords l
+  return . runResponse $ do
+    maybe (abort $ FulfillmentError "Sorry, I couldn't find any trains right now.")
+      (departures)
+      res
+
+    whenIsJust (_line params) line
+    whenIsJust (station') station
+    direction dir'
+
+filterLine
+  :: Text
+  -> [Api.Departure]
+  -> Maybe [Api.Departure]
+filterLine line ds =
+  let res = filter (\d -> Api.departureLine d == line) ds
+  in if null res
+        then Nothing
+        else Just res
+
+filterDepartures
+  :: (Ex.MonadError FulfillmentError m)
+  => Config.Config
+  -> Common.Direction
+  -> Maybe Text
+  -> Api.DepartureMap
+  -> m WebhookFulfillment
+filterDepartures c dir mline d =
+  -- Filter by line if filter is provided
+  let d' = HMS.mapMaybe (maybe pure filterLine mline) d
+  in
+    return . mkFulfillment $ case (null d', HMS.lookup dir d') of
+      (True, _) -> "I could not find any departures for the given parameters."
+      -- We found departures for the specified direction.
+      (False, Just departures) -> formatDepartures c dir departures
+      -- We can't filter by direction, so we'll list them all.
+      (False, Nothing) ->
+        let go m k v = formatDepartures c k v : m
+            l = HMS.foldlWithKey' go empty d'
+        in T.unwords l
 
 formatDepartures :: Config.Config -> Common.Direction -> [Api.Departure] -> Text
 formatDepartures _ Common.Spellbound [] =
@@ -245,16 +259,20 @@ unCamelCase = T.pack . go . T.unpack
 -- * Fulfillment response combinators
 
 data ResponseF r =
-    AbortF Text
+    AbortF FulfillmentError
+  | LineF Text r
+  | StationF Text r
+  | DirectionF Common.Direction r
   | DepartureF Common.Direction Api.Departure r
+  | DeparturesF Api.DepartureMap r
   deriving (Show, Functor)
 
 type Response = Free.Free ResponseF
 
 abort
-  :: Text
+  :: FulfillmentError
   -> Response ()
-abort res = Free.liftF $ AbortF res
+abort = Free.liftF . AbortF
 
 departure
   :: Common.Direction
@@ -262,15 +280,31 @@ departure
   -> Response ()
 departure dir dep = Free.liftF $ DepartureF dir dep ()
 
-exampleProc :: Response ()
-exampleProc = do
-  departure Common.Westbound (Api.Departure "Passy Line" "Passy's Basement" 120)
-  departure Common.Eastbound (Api.Departure "District" "Richmond" 300)
+direction
+  :: Common.Direction
+  -> Response ()
+direction d = Free.liftF $ DirectionF d ()
+
+departures
+  :: Api.DepartureMap
+  -> Response ()
+departures dm = Free.liftF $ DeparturesF dm ()
+
+line
+  :: Text
+  -> Response ()
+line txt = Free.liftF $ LineF txt ()
+
+station
+  :: Text
+  -> Response ()
+station txt = Free.liftF $ StationF txt ()
 
 -- TODO: Move me.
 data ResponseState = ResponseState
-  { _sError :: Maybe Text
+  { _sError :: Maybe FulfillmentError
   , _sStation :: Maybe Text
+  , _sLine :: Maybe Text
   , _sDepartures :: Api.DepartureMap
   , _sDirection :: Common.Direction }
   deriving (Show)
@@ -278,24 +312,30 @@ data ResponseState = ResponseState
 makeLenses ''ResponseState
 
 instance Def.Default ResponseState where
-  def = ResponseState mempty mempty mempty Common.Spellbound
+  def = ResponseState empty empty empty mempty Common.Spellbound
 
 runResponse :: Response () -> WebhookFulfillment
 runResponse res = format $ State.execState (interpResponse res) Def.def
   where
     format (state'@ResponseState{_sError}) =
       case _sError of
-        Just err -> mkFulfillment err
+        Just (FulfillmentError err) -> mkFulfillment err
         Nothing -> formatSuccess state'
 
-    formatDepartures :: Api.DepartureMap -> Text
-    formatDepartures = undefined
+    formatDeparture :: Api.Departure -> Text
+    formatDeparture d =
+      unCamelCase (Api.departureLine d)
+              <> " line to "
+              <> Api.departureDestination d
+              <> " in "
+              <> formatSeconds (Api.departureSeconds d)
+              <> "."
 
     formatSuccess (ResponseState{..}) =
       let preamble = case (null _sDepartures, _sStation, _sDirection) of
               (True, Just station, Common.Spellbound) ->
-                   "My apologies, but there don't seem to be any departures from "
-                <> station <> " at all right now."
+                   "There don't seem to be any departures from "
+                <> station <> " at this time."
               (True, Just station, dir) ->
                    "My apologies, but I couldn't find any upcoming "
                 <> Common.formatDirection dir
@@ -309,7 +349,17 @@ runResponse res = format $ State.execState (interpResponse res) Def.def
                 <> " departures from " <> station <> "."
               (_, Nothing, _) ->
                    "I'm absolutely devo'd but something with the request went wrong."
-      in mkFulfillment preamble
+      in mkFulfillment $ preamble <> filterDepartures _sDirection _sLine _sDepartures
+
+    filterLine
+      :: Text
+      -> [Api.Departure]
+      -> Maybe [Api.Departure]
+    filterLine line ds =
+      let res = filter (\d -> Api.departureLine d == line) ds
+      in if null res
+           then Nothing
+           else Just res
 
 interpResponse :: Response () -> State.State ResponseState ()
 interpResponse (Free.Free (AbortF err)) = sError ?= err
@@ -327,7 +377,7 @@ interpResponse (Free.Pure _) =
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
 app :: Config.Config -> Servant.Application
-app c = Servant.serve testApi (server c)
+app c = Servant.serve api (server c)
 
 -- Run the server.
 --
