@@ -1,15 +1,19 @@
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE DeriveAnyClass #-}
 
 module Main where
 
@@ -18,13 +22,19 @@ import Data.Monoid ((<>))
 
 -- Operator imports
 import Servant ((:>))
-import Control.Lens.Operators ((<&>))
+import Control.Lens (at)
+import Control.Lens.Iso (non)
+import Control.Lens.Operators ((<&>), (?=), (<>~))
+import Control.Lens.TH (makeLenses)
 import Data.Aeson ((.:?))
 
 import qualified Control.Monad.Except as Ex
+import qualified Control.Monad.State.Strict as State
+import qualified Control.Monad.Free as Free
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
 import qualified Data.Char as Char
+import qualified Data.Default as Def
 import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
 import qualified Network.Wai.Handler.Warp as Warp
@@ -70,6 +80,7 @@ data WebhookResult = WebhookResult
 instance Aeson.FromJSON WebhookResult where
   parseJSON = Aeson.genericParseJSON Aeson.defaultOptions { Aeson.fieldLabelModifier = drop 1 }
 
+
 data WebhookParameters = WebhookParameters
   { _direction :: Maybe Common.Direction
   , _station :: Maybe Text
@@ -107,7 +118,9 @@ mkFulfillment :: Text -> WebhookFulfillment
 mkFulfillment text = WebhookFulfillment text text "tube-bot-fulfillment"
 
 -- API specification
-type Api = "webhook" :> Servant.ReqBody '[Servant.JSON] WebhookRequest :> Servant.Post '[Servant.JSON] WebhookFulfillment
+type Api = "webhook"
+           :> Servant.ReqBody '[Servant.JSON] WebhookRequest
+           :> Servant.Post '[Servant.JSON] WebhookFulfillment
 
 testApi :: Proxy Api
 testApi = Proxy
@@ -176,7 +189,7 @@ fulfillDepartureReq c wh = do
       -> Maybe Text
       -> Api.DepartureMap
       -> m WebhookFulfillment
-    filterDepartures dir mline (Api.DepartureMap d) =
+    filterDepartures dir mline d =
       -- Filter by line if filter is provided
       let d' = HMS.mapMaybe (maybe pure filterLine mline) d
       in
@@ -230,6 +243,61 @@ unCamelCase = T.pack . go . T.unpack
                     | otherwise = c : go (d:cs)
         go cs = cs
 
+-- * Fulfillment response combinators
+
+data ResponseF r =
+    AbortF Text
+  | DepartureF Common.Direction Api.Departure r
+  deriving (Show, Functor)
+
+type Response = Free.Free ResponseF
+
+abort
+  :: Text
+  -> Response ()
+abort res = Free.liftF $ AbortF res
+
+departure
+  :: Common.Direction
+  -> Api.Departure
+  -> Response ()
+departure dir dep = Free.liftF $ DepartureF dir dep ()
+
+exampleProc :: Response ()
+exampleProc = do
+  departure Common.Westbound (Api.Departure "Passy Line" "Passy's Basement" 120)
+  departure Common.Eastbound (Api.Departure "District" "Richmond" 300)
+
+-- TODO: Move me.
+data ResponseState = ResponseState
+  { _sError :: Maybe Text
+  , _sStation :: Maybe Text
+  , _sDepartures :: Api.DepartureMap
+  , _sPointOfDeparture :: Maybe Text }
+  deriving (Show)
+
+makeLenses ''ResponseState
+
+instance Def.Default ResponseState where
+  def = ResponseState mempty mempty mempty mempty
+
+runResponse :: Response () -> WebhookFulfillment
+runResponse res = go $ (State.execState (interpResponse res) Def.def)
+  where go (s@ResponseState{..}) = mkFulfillment $ show s
+
+interpResponse :: Response () -> State.State ResponseState ()
+interpResponse (Free.Free (AbortF err)) = sError ?= err
+interpResponse (Free.Free (DepartureF dir dep r)) =
+  -- This warrents a bit of documentation:
+  -- `sDepartures` is the lens obviously, `at dir` works on the hashmap but gives
+  -- us a Maybe, using a _Just prism would work, but then we wouldn't append if it was
+  -- Nothing, so we want to supply a default value, which is exactly what the `non` iso
+  -- does. `<>~` `mappend`s a new value and even sets it to Just if neccessary.
+  -- Cool? Cool.
+  State.modify (sDepartures . at dir . non [] <>~ pure dep) >> interpResponse r
+interpResponse (Free.Pure _) =
+  return ()
+
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
 app :: Config.Config -> Servant.Application
@@ -238,12 +306,13 @@ app c = Servant.serve testApi (server c)
 -- Run the server.
 --
 -- 'run' comes from Network.Wai.Handler.Warp
-runTestServer :: Config.Config -> IO ()
-runTestServer c = Warp.run (fromIntegral $ Config.port c) (app c)
+runServer :: Config.Config -> IO ()
+runServer c = Warp.run (fromIntegral $ Config.port c) (app c)
 
 -- Put this all to work!
 main :: IO ()
 main = do
-  config <- Config.loadConfig
-  putStrLn ("Starting server at http://localhost:" <> show (Config.port config) <> " ..." :: Text)
-  runTestServer config
+  print . runResponse $ exampleProc
+  -- config <- Config.loadConfig
+  -- putStrLn @Text $ "Starting server at http://localhost:" <> show (Config.port config) <> " ..."
+  -- runServer config
