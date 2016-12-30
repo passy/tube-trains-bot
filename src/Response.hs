@@ -99,7 +99,7 @@ interp (Free.Free (LineF v r)) = sLine ?= v >> interp r
 interp (Free.Free (StationF v r)) = sStation ?= v >> interp r
 interp (Free.Free (DirectionF v r)) = sDirection .= v >> interp r
 interp (Free.Free (DepartureF dir dep r)) =
-  -- This warrents a bit of documentation:
+  -- This warrants a bit of documentation:
   -- `sDepartures` is the lens obviously, `at dir` works on the hashmap but gives
   -- us a Maybe, using a _Just prism would work, but then we wouldn't append if it was
   -- Nothing, so we want to supply a default value, which is exactly what the `non` iso

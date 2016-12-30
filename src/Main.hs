@@ -11,10 +11,10 @@
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE TemplateHaskell #-}
 
 module Main where
 
@@ -155,7 +155,7 @@ fulfillDepartureReq c wh = do
 
   return . Response.runResponse c $ do
     maybe (Response.abort $ Common.FulfillmentError "Sorry, I couldn't find any trains right now.")
-      (Response.departures)
+      Response.departures
       res
 
     whenIsJust (_line params) Response.line
