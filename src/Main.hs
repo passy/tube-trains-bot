@@ -23,7 +23,6 @@ import Data.Monoid ((<>))
 
 -- Operator imports
 import Servant ((:>))
-import Control.Lens.Operators ((<&>))
 import Data.Aeson ((.:?))
 
 import qualified Data.Aeson as Aeson
@@ -119,9 +118,7 @@ server c = postWebhookH
             ActionUndefined -> undefinedH
 
         listDeparturesH :: MonadIO m => WebhookRequest -> m Common.WebhookFulfillment
-        listDeparturesH wh =
-          Ex.runExceptT (fulfillDepartureReq c wh)
-            <&> either (\(Common.FulfillmentError e) -> Common.mkFulfillment e) identity
+        listDeparturesH wh = fulfillDepartureReq c wh
 
         aboutH :: Monad m => m Common.WebhookFulfillment
         aboutH = pure . Common.mkFulfillment $
