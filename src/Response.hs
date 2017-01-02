@@ -6,17 +6,18 @@
 
 module Response where
 
-import Protolude hiding ((<>))
+import Protolude hiding ((<>), (&))
 import Data.Monoid ((<>))
 
 -- Operator imports
 import Control.Lens (at)
 import Control.Lens.Iso (non)
-import Control.Lens.Operators ((.=), (?=), (<>~))
+import Control.Lens.Operators ((.=), (?=), (<>~), (?~), (.~), (&))
 import Control.Lens.TH (makeLenses)
 
 import qualified Control.Monad.State.Strict as State
 import qualified Control.Monad.Free as Free
+import qualified Control.Comonad.Cofree as Cofree
 import qualified Data.Char as Char
 import qualified Data.Default as Def
 import qualified Data.HashMap.Strict as HMS
@@ -70,7 +71,6 @@ station
   -> Response ()
 station txt = Free.liftF $ StationF txt ()
 
--- TODO: Move me.
 data ResponseState = ResponseState
   { _sError :: Maybe Common.FulfillmentError
   , _sStation :: Maybe Text
@@ -84,9 +84,9 @@ makeLenses ''ResponseState
 instance Def.Default ResponseState where
   def = ResponseState empty empty empty mempty Common.Spellbound
 
--- TODO: Remove config dependency from here
+-- TODO: Remove the Config depepdency
 runResponse :: Config.Config -> Response () -> Common.WebhookFulfillment
-runResponse c res = format $ State.execState (interp res) Def.def
+runResponse c = format . flip State.execState Def.def . interp
   where
     format (ResponseState{..}) =
       case _sError of
@@ -110,6 +110,59 @@ interp (Free.Free (DeparturesF v r)) =
   State.modify (sDepartures <>~ v) >> interp r
 interp (Free.Pure _) =
   return ()
+
+-- * Comonad for the Response DSL
+
+data CoResponseF k = CoResponseF
+  { abortH :: Common.FulfillmentError -> k
+  , lineH :: Text -> k
+  , stationH :: Text -> k
+  , directionH :: Common.Direction -> k
+  , departureH :: (Common.Direction, Api.Departure) -> k
+  , departuresH :: Api.DepartureMap -> k }
+  deriving Functor
+
+type CoResponse = Cofree.Cofree CoResponseF
+
+-- * Comonadic machinery for CoResponse
+
+mkCoResponse :: CoResponse ResponseState
+mkCoResponse = Cofree.coiter next start'
+  where
+    start' :: ResponseState
+    start' = Def.def
+    next w = CoResponseF
+      (coAbort w)
+      (coLine w)
+      (coStation w)
+      (coDirection w)
+      (coDeparture w)
+      (coDepartures w)
+
+coAbort :: ResponseState -> Common.FulfillmentError -> ResponseState
+coAbort s err = s & sError ?~ err
+
+coLine :: ResponseState -> Text -> ResponseState
+coLine s line' = s & sLine ?~ line'
+
+coStation :: ResponseState -> Text -> ResponseState
+coStation s station' = s & sStation ?~ station'
+
+coDirection :: ResponseState -> Common.Direction -> ResponseState
+coDirection s direction' = s & sDirection .~ direction'
+
+coDeparture :: ResponseState -> (Common.Direction, Api.Departure) -> ResponseState
+coDeparture s (dir, departure') =
+  -- This warrants a bit of documentation:
+  -- `sDepartures` is the lens obviously, `at dir` works on the hashmap but gives
+  -- us a Maybe, using a _Just prism would work, but then we wouldn't append if it was
+  -- Nothing, so we want to supply a default value, which is exactly what the `non` iso
+  -- does. `<>~` `mappend`s a new value and even sets it to Just if neccessary.
+  -- Cool? Cool.
+  s & sDepartures . at dir . non [] <>~ pure departure'
+
+coDepartures :: ResponseState -> Api.DepartureMap -> ResponseState
+coDepartures s dm = s & sDepartures .~ dm
 
 filterLine
   :: Text
