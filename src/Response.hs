@@ -13,10 +13,9 @@ import Data.Monoid ((<>))
 -- Operator imports
 import Control.Lens (at)
 import Control.Lens.Iso (non)
-import Control.Lens.Operators ((.=), (?=), (<>~), (?~), (.~), (&))
+import Control.Lens.Operators ((<>~), (?~), (.~), (&))
 import Control.Lens.TH (makeLenses)
 
-import qualified Control.Monad.State.Strict as State
 import qualified Control.Monad.Free as Free
 import qualified Control.Comonad.Cofree as Cofree
 import qualified Data.Char as Char
@@ -85,32 +84,17 @@ makeLenses ''ResponseState
 instance Def.Default ResponseState where
   def = ResponseState empty empty empty mempty Common.Spellbound
 
--- TODO: Remove the Config depepdency
-runResponse :: Config.Config -> Response () -> Common.WebhookFulfillment
-runResponse c = format . flip State.execState Def.def . interp
+runResponse
+  :: Config.Config
+  -> CoResponse ResponseState
+  -> Response ()
+  -> Common.WebhookFulfillment
+runResponse c coresp resp = format $ pair const coresp resp
   where
     format (ResponseState{..}) =
       case _sError of
         Just (Common.FulfillmentError err) -> Common.mkFulfillment err
         Nothing -> filterDepartures c _sDirection _sLine _sDepartures
-
-interp :: Response () -> State.State ResponseState ()
-interp (Free.Free (AbortF err _)) = sError ?= err
-interp (Free.Free (LineF v r)) = sLine ?= v >> interp r
-interp (Free.Free (StationF v r)) = sStation ?= v >> interp r
-interp (Free.Free (DirectionF v r)) = sDirection .= v >> interp r
-interp (Free.Free (DepartureF dir dep r)) =
-  -- This warrants a bit of documentation:
-  -- `sDepartures` is the lens obviously, `at dir` works on the hashmap but gives
-  -- us a Maybe, using a _Just prism would work, but then we wouldn't append if it was
-  -- Nothing, so we want to supply a default value, which is exactly what the `non` iso
-  -- does. `<>~` `mappend`s a new value and even sets it to Just if neccessary.
-  -- Cool? Cool.
-  State.modify (sDepartures . at dir . non [] <>~ pure dep) >> interp r
-interp (Free.Free (DeparturesF v r)) =
-  State.modify (sDepartures <>~ v) >> interp r
-interp (Free.Pure _) =
-  return ()
 
 -- * Comonad for the Response DSL
 
@@ -167,6 +151,7 @@ coDepartures s dm = s & sDepartures .~ dm
 
 -- * Pairing between Free and Cofree
 
+-- TODO: Replace with a real Adjunction.
 class (Functor f, Functor g) => Pairing f g where
   pair :: (a -> b -> r) -> f a -> g b -> r
 

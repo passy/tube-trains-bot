@@ -150,7 +150,7 @@ fulfillDepartureReq c wh = do
   let station' = _station params
   res <- Api.loadDeparturesForStation c station'
 
-  return . Response.runResponse c $ do
+  return . Response.runResponse c Response.mkCoResponse $ do
     maybe (Response.abort $ Common.FulfillmentError "Sorry, I couldn't find any trains right now.")
       Response.departures
       res
