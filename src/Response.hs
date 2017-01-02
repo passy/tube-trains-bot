@@ -1,3 +1,4 @@
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -30,7 +31,7 @@ import qualified Api
 -- * Fulfillment response combinators
 
 data ResponseF r =
-    AbortF Common.FulfillmentError
+    AbortF Common.FulfillmentError r
   | LineF Text r
   | StationF Text r
   | DirectionF Common.Direction r
@@ -43,7 +44,7 @@ type Response = Free.Free ResponseF
 abort
   :: Common.FulfillmentError
   -> Response ()
-abort = Free.liftF . AbortF
+abort err = Free.liftF $ AbortF err ()
 
 departure
   :: Common.Direction
@@ -94,7 +95,7 @@ runResponse c = format . flip State.execState Def.def . interp
         Nothing -> filterDepartures c _sDirection _sLine _sDepartures
 
 interp :: Response () -> State.State ResponseState ()
-interp (Free.Free (AbortF err)) = sError ?= err
+interp (Free.Free (AbortF err _)) = sError ?= err
 interp (Free.Free (LineF v r)) = sLine ?= v >> interp r
 interp (Free.Free (StationF v r)) = sStation ?= v >> interp r
 interp (Free.Free (DirectionF v r)) = sDirection .= v >> interp r
@@ -118,7 +119,7 @@ data CoResponseF k = CoResponseF
   , lineH :: Text -> k
   , stationH :: Text -> k
   , directionH :: Common.Direction -> k
-  , departureH :: (Common.Direction, Api.Departure) -> k
+  , departureH :: Common.Direction -> Api.Departure -> k
   , departuresH :: Api.DepartureMap -> k }
   deriving Functor
 
@@ -151,8 +152,8 @@ coStation s station' = s & sStation ?~ station'
 coDirection :: ResponseState -> Common.Direction -> ResponseState
 coDirection s direction' = s & sDirection .~ direction'
 
-coDeparture :: ResponseState -> (Common.Direction, Api.Departure) -> ResponseState
-coDeparture s (dir, departure') =
+coDeparture :: ResponseState -> Common.Direction -> Api.Departure -> ResponseState
+coDeparture s dir departure' =
   -- This warrants a bit of documentation:
   -- `sDepartures` is the lens obviously, `at dir` works on the hashmap but gives
   -- us a Maybe, using a _Just prism would work, but then we wouldn't append if it was
@@ -163,6 +164,34 @@ coDeparture s (dir, departure') =
 
 coDepartures :: ResponseState -> Api.DepartureMap -> ResponseState
 coDepartures s dm = s & sDepartures .~ dm
+
+-- * Pairing between Free and Cofree
+
+class (Functor f, Functor g) => Pairing f g where
+  pair :: (a -> b -> r) -> f a -> g b -> r
+
+instance Pairing Identity Identity where
+  pair f (Identity a) (Identity b) = f a b
+
+instance Pairing ((->) a) ((,) a) where
+  pair p f = uncurry (p . f)
+
+instance Pairing ((,) a) ((->) a) where
+  pair p f g = p (snd f) (g (fst f))
+
+instance Pairing f g => Pairing (Cofree.Cofree f) (Free.Free g) where
+  pair p (a Cofree.:< _) (Free.Pure x) = p a x
+  pair p (_ Cofree.:< fs) (Free.Free gs) = pair (pair p) fs gs
+
+instance Pairing CoResponseF ResponseF where
+  pair f (CoResponseF{..}) (AbortF err k) = f (abortH err) k
+  pair f (CoResponseF{..}) (LineF v k) = f (lineH v) k
+  pair f (CoResponseF{..}) (StationF v k) = f (stationH v) k
+  pair f (CoResponseF{..}) (DirectionF v k) = f (directionH v) k
+  pair f (CoResponseF{..}) (DepartureF dir dep k) = f (departureH dir dep) k
+  pair f (CoResponseF{..}) (DeparturesF dm k) = f (departuresH dm) k
+
+-- * Helpers to make the responses work
 
 filterLine
   :: Text
