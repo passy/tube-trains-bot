@@ -1,4 +1,6 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -6,17 +8,18 @@
 
 module Response where
 
-import Protolude hiding ((<>))
+import Protolude hiding ((<>), (&))
 import Data.Monoid ((<>))
 
 -- Operator imports
 import Control.Lens (at)
 import Control.Lens.Iso (non)
-import Control.Lens.Operators ((.=), (?=), (<>~))
+import Control.Lens.Operators ((<>~), (?~), (.~), (&))
 import Control.Lens.TH (makeLenses)
+import Data.Pairing (Pairing(pair))
 
-import qualified Control.Monad.State.Strict as State
 import qualified Control.Monad.Free as Free
+import qualified Control.Comonad.Cofree as Cofree
 import qualified Data.Char as Char
 import qualified Data.Default as Def
 import qualified Data.HashMap.Strict as HMS
@@ -29,7 +32,7 @@ import qualified Api
 -- * Fulfillment response combinators
 
 data ResponseF r =
-    AbortF Common.FulfillmentError
+    AbortF Common.FulfillmentError r
   | LineF Text r
   | StationF Text r
   | DirectionF Common.Direction r
@@ -42,7 +45,7 @@ type Response = Free.Free ResponseF
 abort
   :: Common.FulfillmentError
   -> Response ()
-abort = Free.liftF . AbortF
+abort err = Free.liftF $ AbortF err ()
 
 departure
   :: Common.Direction
@@ -70,7 +73,6 @@ station
   -> Response ()
 station txt = Free.liftF $ StationF txt ()
 
--- TODO: Move me.
 data ResponseState = ResponseState
   { _sError :: Maybe Common.FulfillmentError
   , _sStation :: Maybe Text
@@ -84,32 +86,84 @@ makeLenses ''ResponseState
 instance Def.Default ResponseState where
   def = ResponseState empty empty empty mempty Common.Spellbound
 
--- TODO: Remove config dependency from here
-runResponse :: Config.Config -> Response () -> Common.WebhookFulfillment
-runResponse c res = format $ State.execState (interp res) Def.def
+runResponse
+  :: Config.Config
+  -> CoResponse ResponseState
+  -> Response ()
+  -> Common.WebhookFulfillment
+runResponse c coresp resp = format $ pair const coresp resp
   where
     format (ResponseState{..}) =
       case _sError of
         Just (Common.FulfillmentError err) -> Common.mkFulfillment err
         Nothing -> filterDepartures c _sDirection _sLine _sDepartures
 
-interp :: Response () -> State.State ResponseState ()
-interp (Free.Free (AbortF err)) = sError ?= err
-interp (Free.Free (LineF v r)) = sLine ?= v >> interp r
-interp (Free.Free (StationF v r)) = sStation ?= v >> interp r
-interp (Free.Free (DirectionF v r)) = sDirection .= v >> interp r
-interp (Free.Free (DepartureF dir dep r)) =
+-- * Comonad for the Response DSL
+
+data CoResponseF k = CoResponseF
+  { abortH :: Common.FulfillmentError -> k
+  , lineH :: Text -> k
+  , stationH :: Text -> k
+  , directionH :: Common.Direction -> k
+  , departureH :: Common.Direction -> Api.Departure -> k
+  , departuresH :: Api.DepartureMap -> k }
+  deriving Functor
+
+type CoResponse = Cofree.Cofree CoResponseF
+
+-- * Comonadic machinery for CoResponse
+
+mkCoResponse :: CoResponse ResponseState
+mkCoResponse = Cofree.coiter next start'
+  where
+    start' :: ResponseState
+    start' = Def.def
+    next w = CoResponseF
+      (coAbort w)
+      (coLine w)
+      (coStation w)
+      (coDirection w)
+      (coDeparture w)
+      (coDepartures w)
+
+coAbort :: ResponseState -> Common.FulfillmentError -> ResponseState
+coAbort s err = s & sError ?~ err
+
+coLine :: ResponseState -> Text -> ResponseState
+coLine s line' = s & sLine ?~ line'
+
+coStation :: ResponseState -> Text -> ResponseState
+coStation s station' = s & sStation ?~ station'
+
+coDirection :: ResponseState -> Common.Direction -> ResponseState
+coDirection s direction' = s & sDirection .~ direction'
+
+coDeparture :: ResponseState -> Common.Direction -> Api.Departure -> ResponseState
+coDeparture s dir departure' =
   -- This warrants a bit of documentation:
   -- `sDepartures` is the lens obviously, `at dir` works on the hashmap but gives
   -- us a Maybe, using a _Just prism would work, but then we wouldn't append if it was
   -- Nothing, so we want to supply a default value, which is exactly what the `non` iso
   -- does. `<>~` `mappend`s a new value and even sets it to Just if neccessary.
   -- Cool? Cool.
-  State.modify (sDepartures . at dir . non [] <>~ pure dep) >> interp r
-interp (Free.Free (DeparturesF v r)) =
-  State.modify (sDepartures <>~ v) >> interp r
-interp (Free.Pure _) =
-  return ()
+  s & sDepartures . at dir . non [] <>~ pure departure'
+
+coDepartures :: ResponseState -> Api.DepartureMap -> ResponseState
+coDepartures s dm = s & sDepartures .~ dm
+
+-- * Pairing between Free and Cofree
+
+instance Pairing CoResponseF ResponseF where
+  pair f CoResponseF{..} (AbortF err k) = f (abortH err) k
+  pair f CoResponseF{..} (LineF v k) = f (lineH v) k
+  pair f CoResponseF{..} (StationF v k) = f (stationH v) k
+  pair f CoResponseF{..} (DirectionF v k) = f (directionH v) k
+  pair f CoResponseF{..} (DepartureF dir dep k) = f (departureH dir dep) k
+  pair f CoResponseF{..} (DeparturesF dm k) = f (departuresH dm) k
+
+-- instance Adjunction CoResponseF ResponseF where
+
+-- * Helpers to make the responses work
 
 filterLine
   :: Text
