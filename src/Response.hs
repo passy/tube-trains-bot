@@ -1,5 +1,6 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -15,6 +16,7 @@ import Control.Lens (at)
 import Control.Lens.Iso (non)
 import Control.Lens.Operators ((<>~), (?~), (.~), (&))
 import Control.Lens.TH (makeLenses)
+import Data.Pairing (Pairing(pair))
 
 import qualified Control.Monad.Free as Free
 import qualified Control.Comonad.Cofree as Cofree
@@ -151,30 +153,15 @@ coDepartures s dm = s & sDepartures .~ dm
 
 -- * Pairing between Free and Cofree
 
--- TODO: Replace with a real Adjunction.
-class (Functor f, Functor g) => Pairing f g where
-  pair :: (a -> b -> r) -> f a -> g b -> r
-
-instance Pairing Identity Identity where
-  pair f (Identity a) (Identity b) = f a b
-
-instance Pairing ((->) a) ((,) a) where
-  pair p f = uncurry (p . f)
-
-instance Pairing ((,) a) ((->) a) where
-  pair p f g = p (snd f) (g (fst f))
-
-instance Pairing f g => Pairing (Cofree.Cofree f) (Free.Free g) where
-  pair p (a Cofree.:< _) (Free.Pure x) = p a x
-  pair p (_ Cofree.:< fs) (Free.Free gs) = pair (pair p) fs gs
-
 instance Pairing CoResponseF ResponseF where
-  pair f (CoResponseF{..}) (AbortF err k) = f (abortH err) k
-  pair f (CoResponseF{..}) (LineF v k) = f (lineH v) k
-  pair f (CoResponseF{..}) (StationF v k) = f (stationH v) k
-  pair f (CoResponseF{..}) (DirectionF v k) = f (directionH v) k
-  pair f (CoResponseF{..}) (DepartureF dir dep k) = f (departureH dir dep) k
-  pair f (CoResponseF{..}) (DeparturesF dm k) = f (departuresH dm) k
+  pair f CoResponseF{..} (AbortF err k) = f (abortH err) k
+  pair f CoResponseF{..} (LineF v k) = f (lineH v) k
+  pair f CoResponseF{..} (StationF v k) = f (stationH v) k
+  pair f CoResponseF{..} (DirectionF v k) = f (directionH v) k
+  pair f CoResponseF{..} (DepartureF dir dep k) = f (departureH dir dep) k
+  pair f CoResponseF{..} (DeparturesF dm k) = f (departuresH dm) k
+
+-- instance Adjunction CoResponseF ResponseF where
 
 -- * Helpers to make the responses work
 
