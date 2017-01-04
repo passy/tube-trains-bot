@@ -160,6 +160,14 @@ instance Pairing CoResponseF ResponseF where
   pair f CoResponseF{..} (DepartureF dir dep k) = f (departureH dir dep) k
   pair f CoResponseF{..} (DeparturesF dm k) = f (departuresH dm) k
 
+instance Pairing ResponseF CoResponseF where
+  pair f (AbortF err k) CoResponseF{..} = f k (abortH err)
+  pair f (LineF v k) CoResponseF{..} = f k (lineH v)
+  pair f (StationF v k) CoResponseF{..} = f k (stationH v)
+  pair f (DirectionF v k) CoResponseF{..} = f k (directionH v)
+  pair f (DepartureF dir dep k) CoResponseF{..} = f k (departureH dir dep)
+  pair f (DeparturesF dm k) CoResponseF{..} = f k (departuresH dm)
+
 -- * Helpers to make the responses work
 
 filterLine
