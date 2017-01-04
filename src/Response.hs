@@ -21,7 +21,6 @@ import Data.Pairing (Pairing(pair))
 import qualified Control.Monad.Free as Free
 import qualified Control.Comonad.Cofree as Cofree
 import qualified Data.Char as Char
-import qualified Data.Default as Def
 import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
 
@@ -78,25 +77,25 @@ data ResponseState = ResponseState
   , _sStation :: Maybe Text
   , _sLine :: Maybe Text
   , _sDepartures :: Api.DepartureMap
-  , _sDirection :: Common.Direction }
+  , _sDirection :: Common.Direction
+  , _sConfig :: Config.Config }
   deriving (Show)
 
 makeLenses ''ResponseState
 
-instance Def.Default ResponseState where
-  def = ResponseState empty empty empty mempty Common.Spellbound
+mkResponseState :: Config.Config -> ResponseState
+mkResponseState = ResponseState empty empty empty mempty Common.Spellbound
 
 runResponse
-  :: Config.Config
-  -> CoResponse ResponseState
+  :: CoResponse ResponseState
   -> Response ()
   -> Common.WebhookFulfillment
-runResponse c coresp resp = format $ pair const coresp resp
+runResponse coresp resp = format $ pair const coresp resp
   where
     format ResponseState{..} =
       case _sError of
         Just (Common.FulfillmentError err) -> Common.mkFulfillment err
-        Nothing -> filterDepartures c _sDirection _sLine _sDepartures
+        Nothing -> filterDepartures _sConfig _sDirection _sLine _sDepartures
 
 -- * Comonad for the Response DSL
 
@@ -113,11 +112,11 @@ type CoResponse = Cofree.Cofree CoResponseF
 
 -- * Comonadic machinery for CoResponse
 
-mkCoResponse :: CoResponse ResponseState
-mkCoResponse = Cofree.coiter next start'
+mkCoResponse :: Config.Config -> CoResponse ResponseState
+mkCoResponse c = Cofree.coiter next start'
   where
     start' :: ResponseState
-    start' = Def.def
+    start' = mkResponseState c
     next w = CoResponseF
       (coAbort w)
       (coLine w)
