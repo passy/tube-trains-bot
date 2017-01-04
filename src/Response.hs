@@ -160,8 +160,6 @@ instance Pairing CoResponseF ResponseF where
   pair f CoResponseF{..} (DepartureF dir dep k) = f (departureH dir dep) k
   pair f CoResponseF{..} (DeparturesF dm k) = f (departuresH dm) k
 
--- instance Adjunction CoResponseF ResponseF where
-
 -- * Helpers to make the responses work
 
 filterLine
