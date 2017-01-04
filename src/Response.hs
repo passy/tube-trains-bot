@@ -93,7 +93,7 @@ runResponse
   -> Common.WebhookFulfillment
 runResponse c coresp resp = format $ pair const coresp resp
   where
-    format (ResponseState{..}) =
+    format ResponseState{..} =
       case _sError of
         Just (Common.FulfillmentError err) -> Common.mkFulfillment err
         Nothing -> filterDepartures c _sDirection _sLine _sDepartures

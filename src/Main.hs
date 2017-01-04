@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -11,7 +10,6 @@
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
@@ -118,7 +116,7 @@ server c = postWebhookH
             ActionUndefined -> undefinedH
 
         listDeparturesH :: MonadIO m => WebhookRequest -> m Common.WebhookFulfillment
-        listDeparturesH wh = fulfillDepartureReq c wh
+        listDeparturesH = fulfillDepartureReq c
 
         aboutH :: Monad m => m Common.WebhookFulfillment
         aboutH = pure . Common.mkFulfillment $
@@ -156,7 +154,7 @@ fulfillDepartureReq c wh = do
       res
 
     whenIsJust (_line params) Response.line
-    whenIsJust (station') Response.station
+    whenIsJust station' Response.station
     Response.direction dir'
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
