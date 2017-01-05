@@ -93,9 +93,10 @@ runResponse
 runResponse coresp resp = format $ pair const coresp resp
   where
     format ResponseState{..} =
-      case _sError of
+      let station' = maybe (toStrict $ Config.defaultStation _sConfig) identity _sStation
+      in case _sError of
         Just (Common.FulfillmentError err) -> Common.mkFulfillment err
-        Nothing -> filterDepartures _sConfig _sDirection _sLine _sDepartures
+        Nothing -> filterDepartures _sConfig _sDirection station' _sLine _sDepartures
 
 -- * Comonad for the Response DSL
 
@@ -183,35 +184,40 @@ filterLine l ds =
 filterDepartures
   :: Config.Config
   -> Common.Direction
+  -> Text
   -> Maybe Text
   -> Api.DepartureMap
   -> Common.WebhookFulfillment
-filterDepartures c dir mline d =
+filterDepartures c dir station' mline d =
   -- Filter by line if filter is provided
   let d' = HMS.mapMaybe (maybe pure filterLine mline) d
   in
     Common.mkFulfillment $ case (null d', HMS.lookup dir d') of
       (True, _) -> "I could not find any departures for the given parameters."
       -- We found departures for the specified direction.
-      (False, Just ds) -> formatDepartures c dir ds
+      (False, Just ds) -> formatDepartures c dir station' ds
       -- We can't filter by direction, so we'll list them all.
       (False, Nothing) ->
-        let go m k v = formatDepartures c k v : m
+        let go m k v = formatDepartures c k station' v : m
             l = HMS.foldlWithKey' go empty d'
         in T.unwords l
 
-formatDepartures :: Config.Config -> Common.Direction -> [Api.Departure] -> Text
-formatDepartures _ Common.Spellbound [] =
+-- TODO: Refactor this. The arity is WAY TOO HIGH!
+formatDepartures :: Config.Config -> Common.Direction -> Text -> [Api.Departure] -> Text
+formatDepartures _ Common.Spellbound _ [] =
   "Sorry, there don't seem to be any departures from this station at the moment."
-formatDepartures _ dir [] =
+formatDepartures _ dir _ [] =
      "Sorry, there don't seem to be any "
   <> Common.formatDirection dir
   <> " departures from this station at the moment."
-formatDepartures c dir ds =
+formatDepartures c dir station' ds =
   let directionTxt :: [Text]
       directionTxt = if dir == Common.Spellbound then [] else pure $ Common.formatDirection dir
       preamble :: [Text]
-      preamble = [ "I found the following" ] ++ directionTxt ++ [ "departures from Aldgate East:" ]
+      preamble = [ "I found the following" ]
+                 ++ directionTxt
+                 ++ [ "departures from "
+                    , unCamelCase station' <> ":" ]
       format d = unCamelCase (Api.departureLine d)
               <> " line to "
               <> Api.departureDestination d
