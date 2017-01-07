@@ -154,7 +154,7 @@ fulfillDepartureReq c wh = do
       res
 
     whenIsJust (_line params) Response.line
-    whenIsJust station' Response.station
+    whenIsJust (Common.StationName <$> station') Response.station
     Response.direction dir'
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,

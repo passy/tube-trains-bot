@@ -33,7 +33,7 @@ import qualified Api
 data ResponseF r =
     AbortF Common.FulfillmentError r
   | LineF Text r
-  | StationF Text r
+  | StationF Common.StationName r
   | DirectionF Common.Direction r
   | DepartureF Common.Direction Api.Departure r
   | DeparturesF Api.DepartureMap r
@@ -68,13 +68,13 @@ line
 line txt = Free.liftF $ LineF txt ()
 
 station
-  :: Text
+  :: Common.StationName
   -> Response ()
 station txt = Free.liftF $ StationF txt ()
 
 data ResponseState = ResponseState
   { _sError :: Maybe Common.FulfillmentError
-  , _sStation :: Maybe Text
+  , _sStation :: Maybe Common.StationName
   , _sLine :: Maybe Text
   , _sDepartures :: Api.DepartureMap
   , _sDirection :: Common.Direction
@@ -93,7 +93,7 @@ runResponse
 runResponse coresp resp = format $ pair const coresp resp
   where
     format ResponseState{..} =
-      let station' = maybe (toStrict $ Config.defaultStation _sConfig) identity _sStation
+      let station' = maybe (Common.StationName . toStrict $ Config.defaultStation _sConfig) identity _sStation
       in case _sError of
         Just (Common.FulfillmentError err) -> Common.mkFulfillment err
         Nothing -> filterDepartures _sConfig _sDirection station' _sLine _sDepartures
@@ -103,7 +103,7 @@ runResponse coresp resp = format $ pair const coresp resp
 data CoResponseF k = CoResponseF
   { abortH :: Common.FulfillmentError -> k
   , lineH :: Text -> k
-  , stationH :: Text -> k
+  , stationH :: Common.StationName -> k
   , directionH :: Common.Direction -> k
   , departureH :: Common.Direction -> Api.Departure -> k
   , departuresH :: Api.DepartureMap -> k }
@@ -132,7 +132,7 @@ coAbort s err = s & sError ?~ err
 coLine :: ResponseState -> Text -> ResponseState
 coLine s line' = s & sLine ?~ line'
 
-coStation :: ResponseState -> Text -> ResponseState
+coStation :: ResponseState -> Common.StationName -> ResponseState
 coStation s station' = s & sStation ?~ station'
 
 coDirection :: ResponseState -> Common.Direction -> ResponseState
@@ -184,7 +184,7 @@ filterLine l ds =
 filterDepartures
   :: Config.Config
   -> Common.Direction
-  -> Text
+  -> Common.StationName
   -> Maybe Text
   -> Api.DepartureMap
   -> Common.WebhookFulfillment
@@ -203,14 +203,14 @@ filterDepartures c dir station' mline d =
         in T.unwords l
 
 -- TODO: Refactor this. The arity is WAY TOO HIGH!
-formatDepartures :: Config.Config -> Common.Direction -> Text -> [Api.Departure] -> Text
+formatDepartures :: Config.Config -> Common.Direction -> Common.StationName -> [Api.Departure] -> Text
 formatDepartures _ Common.Spellbound _ [] =
   "Sorry, there don't seem to be any departures from this station at the moment."
 formatDepartures _ dir _ [] =
      "Sorry, there don't seem to be any "
   <> Common.formatDirection dir
   <> " departures from this station at the moment."
-formatDepartures c dir station' ds =
+formatDepartures c dir (Common.StationName station') ds =
   let directionTxt :: [Text]
       directionTxt = if dir == Common.Spellbound then [] else pure $ Common.formatDirection dir
       preamble :: [Text]

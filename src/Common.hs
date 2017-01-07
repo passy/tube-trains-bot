@@ -6,6 +6,7 @@
 
 module Common
   ( Direction(..)
+  , StationName(StationName)
   , FulfillmentError(..)
   , WebhookFulfillment(..)
   , mkFulfillment
@@ -17,6 +18,11 @@ import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
 import qualified Data.Hashable as Hashable
 import qualified Data.Text as T
+
+-- * ADTs and type wrappers
+
+newtype StationName = StationName Text
+  deriving (Show, Eq)
 
 data Direction
   = Westbound
