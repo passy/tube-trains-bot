@@ -1,13 +1,13 @@
 # tube-bot-fulfillment
 
-Fulfilment for an `api.ai`-powered Google Actions bot / integration that will -
-at some undetermined point in the future - answer you stuff about Tube
-departures through your Google Home, or Google Assistant or whatever Google
-offers at that point.
+Fulfilment for an [api.ai](https://api.ai/)-powered [Actions on Google](https://developers.google.com/actions/) integration
+that provides live departure times through a Google Home.
 
 ## Building and Testing
 
-This is just something I'm hacking together, so there'll be mostly manual testing.
+Automated testing is limited at this point, types have provided sufficient help so far.
+
+Some limited test fixtures are available for manual testing:
 
 ```
 stack build
