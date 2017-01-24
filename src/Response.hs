@@ -213,6 +213,8 @@ formatDepartures _ dir _ [] =
 formatDepartures c dir (Common.StationName station') ds =
   let directionTxt :: [Text]
       directionTxt = if dir == Common.Spellbound then [] else pure $ Common.formatDirection dir
+      enquote :: Text -> Text
+      enquote t = "\"" <> t <> "\""
       preamble :: [Text]
       preamble = [ "I found the following" ]
                  ++ directionTxt
@@ -220,7 +222,7 @@ formatDepartures c dir (Common.StationName station') ds =
                     , unCamelCase station' <> ":" ]
       format d = unCamelCase (Api.departureLine d)
               <> " line to "
-              <> Api.departureDestination d
+              <> enquote (Api.departureDestination d)
               <> " in "
               <> formatSeconds (Api.departureSeconds d)
               <> "."
