@@ -32,7 +32,7 @@ import qualified Api
 
 data ResponseF r =
     AbortF Common.FulfillmentError r
-  | LineF Text r
+  | LineF Common.LineName r
   | StationF Common.StationName r
   | DirectionF Common.Direction r
   | DepartureF Common.Direction Api.Departure r
@@ -63,7 +63,7 @@ departures
 departures dm = Free.liftF $ DeparturesF dm ()
 
 line
-  :: Text
+  :: Common.LineName
   -> Response ()
 line txt = Free.liftF $ LineF txt ()
 
@@ -75,7 +75,7 @@ station txt = Free.liftF $ StationF txt ()
 data ResponseState = ResponseState
   { _sError :: Maybe Common.FulfillmentError
   , _sStation :: Maybe Common.StationName
-  , _sLine :: Maybe Text
+  , _sLine :: Maybe Common.LineName
   , _sDepartures :: Api.DepartureMap
   , _sDirection :: Common.Direction
   , _sConfig :: Config.Config }
@@ -102,7 +102,7 @@ runResponse coresp resp = format $ pair const coresp resp
 
 data CoResponseF k = CoResponseF
   { abortH :: Common.FulfillmentError -> k
-  , lineH :: Text -> k
+  , lineH :: Common.LineName -> k
   , stationH :: Common.StationName -> k
   , directionH :: Common.Direction -> k
   , departureH :: Common.Direction -> Api.Departure -> k
@@ -129,7 +129,7 @@ mkCoResponse c = Cofree.coiter next start'
 coAbort :: ResponseState -> Common.FulfillmentError -> ResponseState
 coAbort s err = s & sError ?~ err
 
-coLine :: ResponseState -> Text -> ResponseState
+coLine :: ResponseState -> Common.LineName -> ResponseState
 coLine s line' = s & sLine ?~ line'
 
 coStation :: ResponseState -> Common.StationName -> ResponseState
@@ -172,10 +172,10 @@ instance Pairing ResponseF CoResponseF where
 -- * Helpers to make the responses work
 
 filterLine
-  :: Text
+  :: Common.LineName
   -> [Api.Departure]
   -> Maybe [Api.Departure]
-filterLine l ds =
+filterLine (Common.LineName l) ds =
   let res = filter (\d -> Api.departureLine d == l) ds
   in if null res
         then Nothing
@@ -185,7 +185,7 @@ filterDepartures
   :: Config.Config
   -> Common.Direction
   -> Common.StationName
-  -> Maybe Text
+  -> Maybe Common.LineName
   -> Api.DepartureMap
   -> Common.WebhookFulfillment
 filterDepartures c dir station' mline d =

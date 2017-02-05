@@ -153,7 +153,7 @@ fulfillDepartureReq c wh = do
       Response.departures
       res
 
-    whenIsJust (_line params) Response.line
+    whenIsJust (Common.LineName <$> _line params) Response.line
     whenIsJust (Common.StationName <$> station') Response.station
     Response.direction dir'
 

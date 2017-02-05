@@ -7,6 +7,7 @@
 module Common
   ( Direction(..)
   , StationName(StationName)
+  , LineName(LineName)
   , FulfillmentError(..)
   , WebhookFulfillment(..)
   , mkFulfillment
@@ -22,6 +23,9 @@ import qualified Data.Text as T
 -- * ADTs and type wrappers
 
 newtype StationName = StationName Text
+  deriving (Show, Eq)
+
+newtype LineName = LineName Text
   deriving (Show, Eq)
 
 data Direction
