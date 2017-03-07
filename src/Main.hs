@@ -27,6 +27,7 @@ import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
 import qualified Data.HashMap.Strict as HMS
 import qualified Network.Wai.Handler.Warp as Warp
+import qualified Control.Monad.Logger as Logger
 import qualified Servant
 
 import qualified Api
@@ -105,17 +106,17 @@ api = Proxy
 --
 -- Each handler runs in the 'Handler' monad.
 server :: Config.Config -> Servant.Server Api
-server c = postWebhookH
+server c = Logger.runStderrLoggingT . postWebhookH
 
   -- This isn't a great Monad to work in. I want better error handling.
-  where postWebhookH :: MonadIO m => WebhookRequest -> m Common.WebhookFulfillment
+  where postWebhookH :: (MonadIO m, Logger.MonadLogger m) => WebhookRequest -> m Common.WebhookFulfillment
         postWebhookH wh =
           case _action . _result $ wh of
             ActionListDepartures -> listDeparturesH wh
             ActionAbout -> aboutH
             ActionUndefined -> undefinedH
 
-        listDeparturesH :: MonadIO m => WebhookRequest -> m Common.WebhookFulfillment
+        listDeparturesH :: (MonadIO m, Logger.MonadLogger m) => WebhookRequest -> m Common.WebhookFulfillment
         listDeparturesH = fulfillDepartureReq c
 
         aboutH :: Monad m => m Common.WebhookFulfillment
@@ -138,7 +139,7 @@ whenIsJust (Just x) f = f x
 whenIsJust Nothing _ = return ()
 
 fulfillDepartureReq
-  :: (MonadIO m)
+  :: (MonadIO m, Logger.MonadLogger m)
   => Config.Config
   -> WebhookRequest
   -> m Common.WebhookFulfillment
@@ -146,16 +147,20 @@ fulfillDepartureReq c wh = do
   let params = _parameters . _result $ wh
   let dir' = fromMaybe Common.Spellbound $ _direction params
   let station' = _station params
+  Logger.logInfoN $ "departureReq: " <> show params
   res <- Api.loadDeparturesForStation c station'
+  let resp =
+        Response.runResponse (Response.mkCoResponse c) $
+        do maybe
+             (Response.abort $ Common.FulfillmentError "Sorry, I couldn't find any trains right now.")
+             Response.departures
+             res
+           whenIsJust (Common.LineName <$> _line params) Response.line
+           whenIsJust (Common.StationName <$> station') Response.station
+           Response.direction dir'
 
-  return . Response.runResponse (Response.mkCoResponse c) $ do
-    maybe (Response.abort $ Common.FulfillmentError "Sorry, I couldn't find any trains right now.")
-      Response.departures
-      res
-
-    whenIsJust (Common.LineName <$> _line params) Response.line
-    whenIsJust (Common.StationName <$> station') Response.station
-    Response.direction dir'
+  Logger.logInfoN $ "departureResp: " <> show resp
+  return resp
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.
