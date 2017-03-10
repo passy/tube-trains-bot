@@ -7,13 +7,15 @@
       "value": "AldgateEast",
       "synonyms": [
         "AldgateEast",
-        "aldgate east"
+        "aldgate east",
+        "old skate east"
       ]
     },
     {
       "value": "Aldgate",
       "synonyms": [
-        "aldgate"
+        "aldgate",
+        "old skate"
       ]
     },
     {
@@ -610,5 +612,5 @@
     }
   ],
   "isEnum": false,
-  "automatedExpansion": true
+  "automatedExpansion": false
 }

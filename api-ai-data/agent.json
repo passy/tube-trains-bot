@@ -1,0 +1,40 @@
+{
+  "description": "Live train departure information for Google Home",
+  "language": "en",
+  "enabledDomainFeatures": [
+    "smalltalk-domain-on",
+    "smalltalk-fulfillment-on"
+  ],
+  "googleAssistant": {
+    "googleAssistantCompatible": true,
+    "invocationName": "Departure Mate",
+    "project": "tube-bot",
+    "welcomeIntentSignInRequired": false,
+    "startIntents": [
+      {
+        "intentId": "aef959da-ad17-449d-b8ec-56548336f666",
+        "signInRequired": false
+      }
+    ],
+    "endIntentIds": [
+      "aef959da-ad17-449d-b8ec-56548336f666"
+    ],
+    "oAuthLinking": {
+      "required": false,
+      "grantType": "AUTH_CODE_GRANT"
+    },
+    "voiceType": "FEMALE_2"
+  },
+  "defaultTimezone": "Europe/London",
+  "webhook": {
+    "url": "https://tubebotwh.rdrei.net/webhook",
+    "headers": {
+      "": ""
+    },
+    "available": true,
+    "useForDomains": false
+  },
+  "isPrivate": false,
+  "customClassifierMode": "use.after",
+  "mlMinConfidence": 0.2
+}

@@ -1,21 +1,43 @@
 {
-  "templates": [
-    "departures for @line:line  @direction:direction ",
-    "@direction:direction trains from @line:line ",
-    "@direction:direction departures from @station:station on @line:line ",
-    "Give me the departures from @station:station .",
-    "What are departures from @station:station for the @line:line  @direction:direction ?",
-    "What are upcoming departures for the @line:line , @direction:direction ?",
-    "What are upcoming departures for the @line:line ?",
-    "Give me the next departure for @line:line !",
-    "Give me @direction:direction departures for @line:line .",
-    "What are the next departures going @direction:direction on the @line:line ?",
-    "When are the next departures for @line:line  @direction:direction ?",
-    "Tell me about departures.",
-    "Which are the next departures?",
-    "What are the next departures?"
-  ],
   "userSays": [
+    {
+      "id": "72b58637-52b9-4394-9a3d-8682b250071c",
+      "data": [
+        {
+          "text": "eastbound",
+          "alias": "direction",
+          "meta": "@direction",
+          "userDefined": false
+        },
+        {
+          "text": " departures from "
+        },
+        {
+          "text": "old skate East",
+          "alias": "station",
+          "meta": "@station",
+          "userDefined": true
+        }
+      ],
+      "isTemplate": false,
+      "count": 0
+    },
+    {
+      "id": "5c816b6f-c20a-45c9-b2b8-c30f728cc3f0",
+      "data": [
+        {
+          "text": "departures from "
+        },
+        {
+          "text": "london bridge",
+          "alias": "station",
+          "meta": "@station",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 1
+    },
     {
       "id": "24f60338-44b3-4934-be53-0099cf1c345c",
       "data": [
@@ -89,9 +111,6 @@
           "alias": "line",
           "meta": "@line",
           "userDefined": false
-        },
-        {
-          "text": ""
         }
       ],
       "isTemplate": false,
@@ -347,7 +366,8 @@
         {
           "dataType": "@direction",
           "name": "direction",
-          "value": "$direction"
+          "value": "$direction",
+          "isList": false
         },
         {
           "dataType": "@line",
@@ -355,19 +375,28 @@
           "value": "$line"
         },
         {
+          "required": true,
           "dataType": "@station",
           "name": "station",
-          "value": "$station"
+          "value": "$station",
+          "prompts": [
+            "From what station?",
+            "What station do you want departures from?",
+            "Could you tell me the name of the station?",
+            "Sorry, what station do you mean?",
+            "Could you repeat the station you want to know about?"
+          ]
         }
       ],
-      "messages": []
+      "messages": [
+        {
+          "type": 0,
+          "speech": []
+        }
+      ]
     }
   ],
   "priority": 750000,
-  "cortanaCommand": {
-    "navigateOrService": "NAVIGATE",
-    "target": ""
-  },
   "webhookUsed": true,
   "webhookForSlotFilling": false,
   "fallbackIntent": false,

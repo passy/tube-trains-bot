@@ -1,0 +1,15 @@
+{
+  "domain": "smalltalk",
+  "customResponses": [
+    {
+      "action": "smalltalk.person",
+      "parameters": [
+        "simplified: who are you",
+        "simplified: let us talk about you"
+      ],
+      "customAnswers": [
+        "Just a friendly bot who likes trains."
+      ]
+    }
+  ]
+}

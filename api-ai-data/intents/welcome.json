@@ -1,9 +1,4 @@
 {
-  "templates": [
-    "What are you?",
-    "How can you help me?",
-    "What can you do?"
-  ],
   "userSays": [
     {
       "id": "b311c7fc-94bd-4020-9921-387ea34140cc",
@@ -57,10 +52,6 @@
     }
   ],
   "priority": 250000,
-  "cortanaCommand": {
-    "navigateOrService": "NAVIGATE",
-    "target": ""
-  },
   "webhookUsed": false,
   "webhookForSlotFilling": false,
   "fallbackIntent": false,

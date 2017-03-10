@@ -1,15 +1,4 @@
 {
-  "templates": [
-    "What are you?",
-    "Tell me who you are.",
-    "Tell me about you.",
-    "Tell me about yourself.",
-    "Who built you?",
-    "Are you a robot?",
-    "Do you run on Haskell?",
-    "What powers you?",
-    "How do you work?"
-  ],
   "userSays": [
     {
       "id": "b24cbd3e-bff6-4a65-99a0-c291277d606e",
@@ -121,10 +110,6 @@
     }
   ],
   "priority": 500000,
-  "cortanaCommand": {
-    "navigateOrService": "NAVIGATE",
-    "target": ""
-  },
   "webhookUsed": true,
   "webhookForSlotFilling": false,
   "fallbackIntent": false,
