@@ -6,16 +6,21 @@ module Api
   ( loadDeparturesForStation
   , Departure(..)
   , DepartureMap
+  -- * For testing
+  , parseDepartures
   ) where
 
 import Protolude
+
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
+import qualified Data.ByteString.Lazy   as BS
+import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
 import qualified Data.Text.Format as Format
-import qualified Network.Wreq as Wreq
 import qualified Data.Vector as Vector
-import qualified Data.HashMap.Strict as HMS
+import qualified Data.Vector.Extra as Vector
+import qualified Network.Wreq as Wreq
 
 import qualified Config
 import qualified Common
@@ -55,22 +60,32 @@ loadDeparturesForStation
 loadDeparturesForStation config stationName = do
   let url = mkUrlForStation config stationName
   r <- liftIO . Wreq.get $ T.unpack url
+  return . parseDepartures $ r ^. Wreq.responseBody
+
+parseDepartures
+  :: BS.ByteString
+  -> Maybe DepartureMap
+parseDepartures r =
   -- TODO: This is super fragile. I should at iterate and find the right depature groupings. The first
   -- part appears to be fixed. I'm sure there's some cool Lens shit for this.
   let groupings :: Maybe (Vector.Vector Aeson.Value)
       groupings =
-        r ^? Wreq.responseBody
-           . key "stations"
+        r ^? key "stations"
            . nth 0
            . key "sections"
            . nth 0
            . key "departure_groupings"
            . _Array
+
       departures :: Maybe (Vector.Vector (Common.Direction, [Departure]))
-      departures = sequence =<< fmap extractDepartures' <$> groupings
-  return $ HMS.fromList . Vector.toList <$> departures
+      departures = Vector.mapMaybe identity . fmap extractDepartures' <$> groupings
+
+  in
+    HMS.fromList . Vector.toList <$> departures
+
   where
     extractDepartures :: Aeson.Value -> Aeson.Parser (Common.Direction, [Departure])
     extractDepartures = Aeson.withObject "departure" $ \o -> (,) <$> o .: "direction_name" <*> o .: "departures"
+
     extractDepartures' :: Aeson.Value -> Maybe (Common.Direction, [Departure])
-    extractDepartures' = Aeson.parseMaybe extractDepartures
+    extractDepartures' v = Aeson.parseMaybe extractDepartures v
