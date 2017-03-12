@@ -11,6 +11,7 @@ category:            Web
 extra-source-files:
   - README.md
   - stack.yaml
+  - test/fixtures/*
 
 ghc-options:
   - -Wall
