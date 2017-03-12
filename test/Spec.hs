@@ -22,21 +22,32 @@ readFixture path = do
     dir <- getCurrentDirectory
     BS.fromStrict . TE.encodeUtf8 <$> TIO.readFile (dir </> "test" </> "fixtures" </> path)
 
+superUnsafeParse :: Aeson.FromJSON a => BS.ByteString -> a
+superUnsafeParse = either (error . T.pack) identity . Aeson.eitherDecode
+
 main :: IO ()
 main = hspec $ do
   describe "Tube Bot" $ do
     describe "JSON Parsing" $ do
 
       it "parses a search response" $ do
-        pendingWith "soon"
         resp <- readFixture "metrodepartures.json"
         Api.parseDepartures resp `shouldSatisfy` isJust
 
-      it "prases a departure" $ do
+      it "parses a departure" $ do
         resp <- readFixture "singledeparture.json"
         let dp :: Api.Departure
-            dp = either (error . T.pack) identity (Aeson.eitherDecode resp)
+            dp = superUnsafeParse resp
 
         Api.departureLine dp `shouldBe` "District"
         Api.departureDestination dp `shouldBe` "West Ham"
         Api.departureSeconds dp `shouldBe` 187
+
+      it "prases a departure without seconds" $ do
+        resp <- readFixture "singledeparture_noseconds.json"
+        let dp :: Api.Departure
+            dp = superUnsafeParse resp
+
+        Api.departureLine dp `shouldBe` "District"
+        Api.departureDestination dp `shouldBe` "West Ham"
+        Api.departureSeconds dp `shouldBe` -1
