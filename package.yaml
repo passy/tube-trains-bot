@@ -34,7 +34,6 @@ dependencies:
   - monad-logger
   - mtl
   - protolude
-  - protolude
   - servant-server
   - text
   - text-format
@@ -44,7 +43,25 @@ dependencies:
   - warp
   - wreq
 
+library:
+  source-dirs: src
+  exposed-modules:
+    - Api
+
 executables:
   tube-bot-fulfillment:
     source-dirs:      src
     main:             Main.hs
+    dependencies:
+      - tube-bot-fulfillment
+
+tests:
+  spec:
+    main: Spec.hs
+    source-dirs: test
+    ghc-options: -threaded -rtsopts -with-rtsopts=-N
+    dependencies:
+      - tube-bot-fulfillment
+      - hspec
+      - directory
+      - filepath
