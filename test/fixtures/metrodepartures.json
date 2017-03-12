@@ -1,1 +1,266 @@
-{"last_updated_time": "2017-03-12T14:48:47+00:00", "stations": [{"routes": [{"status": {"summary": "Part Closure", "description": "DISTRICT LINE: Saturday 11 and Sunday 12 March, no service between Aldgate East and West Ham, between High Street Kensington and Edgware Road, and between Earl's Court and Kensington Olympia.\n\nDISTRICT LINE: Saturday 11 and Sunday 12 March, no service between Aldgate East and West Ham, between High Street Kensington and Edgware Road, and between Earl's Court and Kensington Olympia. Replacement buses operate between Tower Hill and Canning Town. This is to allow us to test new signalling, as well as Crossrail construction work at Whitechapel.", "level": 2}, "supports_routeinfo": true, "name": "District", "color": "#007229", "brand": "Underground", "live_line_code": "District", "text_color": "#FFFFFF", "icon_name": "uk-london-tube-district", "icon_contains_name": false, "ui_color": "#007229", "aliases": ["district"]}, {"status": {"summary": "Part Closure", "description": "HAMMERSMITH & CITY LINE: Saturday 11 and Sunday 12 March, no service between Edgware Road and Barking.\n\nHAMMERSMITH & CITY LINE: Saturday 11 and Sunday 12 March, no service between Edgware Road and Barking while we test new signalling and replace track at Farringdon and Liverpool Street, as well as Crossrail construction work at Whitechapel. Replacement buses operate between Tower Hill and Canning Town via Aldgate.", "level": 2}, "supports_routeinfo": true, "name": "Hammersmith & City", "color": "#D799AF", "ui_color": "#D18BA4", "live_line_code": "HammersmithAndCity", "text_color": "#113B92", "icon_name": "uk-london-tube-hammersmithandcity", "icon_contains_name": false, "brand": "Underground", "aliases": ["hammersmith-city"]}], "sections": [{"departure_groupings": [{"direction_name": "Eastbound", "platform_name": "pl. 2", "schedule_grouping_id": "Platform_AldgateEast_DHc_dNE__Eastbound", "advertised_route_ids": ["District", "HammersmithAndCity"], "departures": [{"route_id": "District", "destination_name": "West Ham", "pattern_id": "1Dis_Y051480111_0_26__Stations", "time_seconds": 187, "direction_id": "1"}, {"route_id": "District", "destination_name": "West Ham", "pattern_id": "1Dis_Y051480111_0_26__Stations", "time_seconds": 877, "direction_id": "1"}], "grouping_id": "Platform_AldgateEast_DHc_dNE_pl. 2_Eastbound"}, {"grouping_id": "Platform_AldgateEast_DHc__Westbound", "schedule_grouping_id": "Platform_AldgateEast_DHc__Westbound", "advertised_route_ids": ["District", "HammersmithAndCity"], "departures": [{"scheduled_time": "2017-03-12T14:50:00+00:00", "route_id": "District", "destination_name": "Ealing Broadway", "pattern_id": "1Dis_Y051480111_0_27__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T14:53:00+00:00", "route_id": "District", "destination_name": "Wimbledon", "pattern_id": "1Dis_Y051480111_0_26__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T14:55:00+00:00", "route_id": "District", "destination_name": "Richmond", "pattern_id": "1Dis_Y051480111_0_28__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T14:58:00+00:00", "route_id": "HammersmithAndCity", "destination_name": "Hammersmith", "pattern_id": "1Ham_Y05515601_0_1__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T15:00:00+00:00", "route_id": "District", "destination_name": "Ealing Broadway", "pattern_id": "1Dis_Y051480111_0_27__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T15:05:00+00:00", "route_id": "District", "destination_name": "Richmond", "pattern_id": "1Dis_Y051480111_0_28__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T15:08:00+00:00", "route_id": "HammersmithAndCity", "destination_name": "Hammersmith", "pattern_id": "1Ham_Y05515601_0_1__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T15:10:00+00:00", "route_id": "District", "destination_name": "Ealing Broadway", "pattern_id": "1Dis_Y051480111_0_27__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T15:13:00+00:00", "route_id": "District", "destination_name": "Wimbledon", "pattern_id": "1Dis_Y051480111_0_26__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T15:15:00+00:00", "route_id": "District", "destination_name": "Richmond", "pattern_id": "1Dis_Y051480111_0_28__Stations", "direction_id": "0"}], "direction_name": "Westbound"}], "id": "AldgateEast_DistrictHammersmithAndCity", "name": "Departures", "departure_types": ["now"]}, {"departure_groupings": [{"direction_name": "Eastbound", "schedule_grouping_id": "Platform_AldgateEast_DHc_dNE__Eastbound", "not_next_departures": true, "departures": [{"route_id": "HammersmithAndCity", "destination_name": "Upminster", "scheduled_time": "2017-03-12T23:24:00+00:00"}, {"scheduled_time": "2017-03-13T00:18:00+00:00", "route_id": "District", "destination_name": "Upminster", "pattern_id": "1Dis_Y051480111_0_28__Stations", "direction_id": "1"}, {"scheduled_time": "2017-03-13T00:30:00+00:00", "route_id": "HammersmithAndCity", "destination_name": "Barking", "pattern_id": "1Ham_Y05515601_0_1__Stations", "direction_id": "1"}], "advertised_route_ids": ["District", "HammersmithAndCity"], "grouping_id": "Platform_AldgateEast_DHc_dNE__Eastbound_Last_Metro"}, {"direction_name": "Westbound", "schedule_grouping_id": "Platform_AldgateEast_DHc__Westbound", "not_next_departures": true, "departures": [{"scheduled_time": "2017-03-12T23:20:00+00:00", "route_id": "District", "destination_name": "Richmond", "pattern_id": "1Dis_Y051480111_0_28__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T23:25:00+00:00", "route_id": "District", "destination_name": "Wimbledon", "pattern_id": "1Dis_Y051480111_0_26__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-12T23:49:00+00:00", "route_id": "District", "destination_name": "Ealing Broadway", "pattern_id": "1Dis_Y051480111_0_27__Stations", "direction_id": "0"}, {"scheduled_time": "2017-03-13T00:09:00+00:00", "route_id": "HammersmithAndCity", "destination_name": "Hammersmith", "pattern_id": "1Ham_Y05515601_0_1__Stations", "direction_id": "0"}], "advertised_route_ids": ["District", "HammersmithAndCity"], "grouping_id": "Platform_AldgateEast_DHc__Westbound_Last_Metro"}], "id": "AldgateEast_Last_Metro", "departure_types": ["last"], "name": "Last Trains \u2014 Tonight"}], "station": {"status": {"level": 0, "description": "", "summary": "Open"}, "name": "Aldgate East", "coords": [51.515233, -0.072287], "brands": ["Underground"], "live_code": "AldgateEast", "route_icon_names": ["uk-london-tube-district", "uk-london-tube-hammersmithandcity"]}, "messages": []}]}
+{
+    "last_updated_time": "2017-03-12T14:48:47+00:00",
+    "stations": [
+        {
+            "routes": [
+                {
+                    "status": {
+                        "summary": "Part Closure",
+                        "description": "DISTRICT LINE: Saturday 11 and Sunday 12 March, no service between Aldgate East and West Ham, between High Street Kensington and Edgware Road, and between Earl's Court and Kensington Olympia.\n\nDISTRICT LINE: Saturday 11 and Sunday 12 March, no service between Aldgate East and West Ham, between High Street Kensington and Edgware Road, and between Earl's Court and Kensington Olympia. Replacement buses operate between Tower Hill and Canning Town. This is to allow us to test new signalling, as well as Crossrail construction work at Whitechapel.",
+                        "level": 2
+                    },
+                    "supports_routeinfo": true,
+                    "name": "District",
+                    "color": "#007229",
+                    "brand": "Underground",
+                    "live_line_code": "District",
+                    "text_color": "#FFFFFF",
+                    "icon_name": "uk-london-tube-district",
+                    "icon_contains_name": false,
+                    "ui_color": "#007229",
+                    "aliases": [
+                        "district"
+                    ]
+                },
+                {
+                    "status": {
+                        "summary": "Part Closure",
+                        "description": "HAMMERSMITH & CITY LINE: Saturday 11 and Sunday 12 March, no service between Edgware Road and Barking.\n\nHAMMERSMITH & CITY LINE: Saturday 11 and Sunday 12 March, no service between Edgware Road and Barking while we test new signalling and replace track at Farringdon and Liverpool Street, as well as Crossrail construction work at Whitechapel. Replacement buses operate between Tower Hill and Canning Town via Aldgate.",
+                        "level": 2
+                    },
+                    "supports_routeinfo": true,
+                    "name": "Hammersmith & City",
+                    "color": "#D799AF",
+                    "ui_color": "#D18BA4",
+                    "live_line_code": "HammersmithAndCity",
+                    "text_color": "#113B92",
+                    "icon_name": "uk-london-tube-hammersmithandcity",
+                    "icon_contains_name": false,
+                    "brand": "Underground",
+                    "aliases": [
+                        "hammersmith-city"
+                    ]
+                }
+            ],
+            "sections": [
+                {
+                    "departure_groupings": [
+                        {
+                            "direction_name": "Eastbound",
+                            "platform_name": "pl. 2",
+                            "schedule_grouping_id": "Platform_AldgateEast_DHc_dNE__Eastbound",
+                            "advertised_route_ids": [
+                                "District",
+                                "HammersmithAndCity"
+                            ],
+                            "departures": [
+                                {
+                                    "route_id": "District",
+                                    "destination_name": "West Ham",
+                                    "pattern_id": "1Dis_Y051480111_0_26__Stations",
+                                    "time_seconds": 187,
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "route_id": "District",
+                                    "destination_name": "West Ham",
+                                    "pattern_id": "1Dis_Y051480111_0_26__Stations",
+                                    "time_seconds": 877,
+                                    "direction_id": "1"
+                                }
+                            ],
+                            "grouping_id": "Platform_AldgateEast_DHc_dNE_pl. 2_Eastbound"
+                        },
+                        {
+                            "grouping_id": "Platform_AldgateEast_DHc__Westbound",
+                            "schedule_grouping_id": "Platform_AldgateEast_DHc__Westbound",
+                            "advertised_route_ids": [
+                                "District",
+                                "HammersmithAndCity"
+                            ],
+                            "departures": [
+                                {
+                                    "scheduled_time": "2017-03-12T14:50:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Ealing Broadway",
+                                    "pattern_id": "1Dis_Y051480111_0_27__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T14:53:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Wimbledon",
+                                    "pattern_id": "1Dis_Y051480111_0_26__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T14:55:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Richmond",
+                                    "pattern_id": "1Dis_Y051480111_0_28__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T14:58:00+00:00",
+                                    "route_id": "HammersmithAndCity",
+                                    "destination_name": "Hammersmith",
+                                    "pattern_id": "1Ham_Y05515601_0_1__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T15:00:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Ealing Broadway",
+                                    "pattern_id": "1Dis_Y051480111_0_27__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T15:05:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Richmond",
+                                    "pattern_id": "1Dis_Y051480111_0_28__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T15:08:00+00:00",
+                                    "route_id": "HammersmithAndCity",
+                                    "destination_name": "Hammersmith",
+                                    "pattern_id": "1Ham_Y05515601_0_1__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T15:10:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Ealing Broadway",
+                                    "pattern_id": "1Dis_Y051480111_0_27__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T15:13:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Wimbledon",
+                                    "pattern_id": "1Dis_Y051480111_0_26__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T15:15:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Richmond",
+                                    "pattern_id": "1Dis_Y051480111_0_28__Stations",
+                                    "direction_id": "0"
+                                }
+                            ],
+                            "direction_name": "Westbound"
+                        }
+                    ],
+                    "id": "AldgateEast_DistrictHammersmithAndCity",
+                    "name": "Departures",
+                    "departure_types": [
+                        "now"
+                    ]
+                },
+                {
+                    "departure_groupings": [
+                        {
+                            "direction_name": "Eastbound",
+                            "schedule_grouping_id": "Platform_AldgateEast_DHc_dNE__Eastbound",
+                            "not_next_departures": true,
+                            "departures": [
+                                {
+                                    "route_id": "HammersmithAndCity",
+                                    "destination_name": "Upminster",
+                                    "scheduled_time": "2017-03-12T23:24:00+00:00"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-13T00:18:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Upminster",
+                                    "pattern_id": "1Dis_Y051480111_0_28__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-13T00:30:00+00:00",
+                                    "route_id": "HammersmithAndCity",
+                                    "destination_name": "Barking",
+                                    "pattern_id": "1Ham_Y05515601_0_1__Stations",
+                                    "direction_id": "1"
+                                }
+                            ],
+                            "advertised_route_ids": [
+                                "District",
+                                "HammersmithAndCity"
+                            ],
+                            "grouping_id": "Platform_AldgateEast_DHc_dNE__Eastbound_Last_Metro"
+                        },
+                        {
+                            "direction_name": "Westbound",
+                            "schedule_grouping_id": "Platform_AldgateEast_DHc__Westbound",
+                            "not_next_departures": true,
+                            "departures": [
+                                {
+                                    "scheduled_time": "2017-03-12T23:20:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Richmond",
+                                    "pattern_id": "1Dis_Y051480111_0_28__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T23:25:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Wimbledon",
+                                    "pattern_id": "1Dis_Y051480111_0_26__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-12T23:49:00+00:00",
+                                    "route_id": "District",
+                                    "destination_name": "Ealing Broadway",
+                                    "pattern_id": "1Dis_Y051480111_0_27__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-03-13T00:09:00+00:00",
+                                    "route_id": "HammersmithAndCity",
+                                    "destination_name": "Hammersmith",
+                                    "pattern_id": "1Ham_Y05515601_0_1__Stations",
+                                    "direction_id": "0"
+                                }
+                            ],
+                            "advertised_route_ids": [
+                                "District",
+                                "HammersmithAndCity"
+                            ],
+                            "grouping_id": "Platform_AldgateEast_DHc__Westbound_Last_Metro"
+                        }
+                    ],
+                    "id": "AldgateEast_Last_Metro",
+                    "departure_types": [
+                        "last"
+                    ],
+                    "name": "Last Trains \u2014 Tonight"
+                }
+            ],
+            "station": {
+                "status": {
+                    "level": 0,
+                    "description": "",
+                    "summary": "Open"
+                },
+                "name": "Aldgate East",
+                "coords": [
+                    51.515233,
+                    -0.072287
+                ],
+                "brands": [
+                    "Underground"
+                ],
+                "live_code": "AldgateEast",
+                "route_icon_names": [
+                    "uk-london-tube-district",
+                    "uk-london-tube-hammersmithandcity"
+                ]
+            },
+            "messages": []
+        }
+    ]
+}
