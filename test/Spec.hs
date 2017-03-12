@@ -5,6 +5,7 @@
 import Protolude
 import System.Directory (getCurrentDirectory )
 import System.FilePath ((</>))
+import Data.String (String)
 
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
@@ -43,11 +44,9 @@ main = hspec $ do
         Api.departureDestination dp `shouldBe` "West Ham"
         Api.departureSeconds dp `shouldBe` 187
 
-      it "prases a departure without seconds" $ do
+      it "fails to parse a departure without seconds" $ do
         resp <- readFixture "singledeparture_noseconds.json"
-        let dp :: Api.Departure
-            dp = superUnsafeParse resp
+        let dp :: Either String Api.Departure
+            dp = Aeson.eitherDecode resp
 
-        Api.departureLine dp `shouldBe` "District"
-        Api.departureDestination dp `shouldBe` "West Ham"
-        Api.departureSeconds dp `shouldBe` -1
+        dp `shouldSatisfy` isLeft

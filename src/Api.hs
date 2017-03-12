@@ -19,6 +19,7 @@ import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
 import qualified Data.Text.Format as Format
 import qualified Data.Vector as Vector
+import qualified Data.Vector.Extra as Vector
 import qualified Network.Wreq as Wreq
 
 import qualified Config
@@ -75,8 +76,9 @@ parseDepartures r =
            . nth 0
            . key "departure_groupings"
            . _Array
+
       departures :: Maybe (Vector.Vector (Common.Direction, [Departure]))
-      departures = sequence =<< fmap extractDepartures' <$> groupings
+      departures = Vector.mapMaybe identity . fmap extractDepartures' <$> groupings
 
   in
     HMS.fromList . Vector.toList <$> departures
@@ -86,4 +88,4 @@ parseDepartures r =
     extractDepartures = Aeson.withObject "departure" $ \o -> (,) <$> o .: "direction_name" <*> o .: "departures"
 
     extractDepartures' :: Aeson.Value -> Maybe (Common.Direction, [Departure])
-    extractDepartures' v = traceShowId $ Aeson.parseMaybe extractDepartures v
+    extractDepartures' v = Aeson.parseMaybe extractDepartures v

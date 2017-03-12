@@ -4,5 +4,4 @@ packages:
 - '.'
 extra-deps:
 - dhall-1.1.0
-- recursion-schemes-5.0.1
 resolver: lts-8.5
