@@ -1,5 +1,6 @@
 # Tube Trains - Google Home Action
 
+<img src="assets/smol.png" align=left>
 Fulfilment for an [api.ai](https://api.ai/)-powered [Actions on Google](https://developers.google.com/actions/) integration
 that provides live departure times through a Google Home.
 
