@@ -5,6 +5,20 @@
 Fulfilment for an [api.ai](https://api.ai/) -powered [Actions on Google](https://developers.google.com/actions/) integration
 that provides live departure times through a Google Home.
 
+## Using
+
+This is deployed and live! If you have a Google Home, ask activate it by saying
+
+"Hey Google, let me talk to Tube Trains."
+
+You can see it in action here:
+
+[![](assets/video_thumb.png)](https://twitter.com/passy/status/843184619935715332)
+
+You can also find it under the available services in the Google Home app:
+
+![](assets/app.png)
+
 ## Building and Testing
 
 Automated testing is limited at this point, types have provided sufficient help so far.
