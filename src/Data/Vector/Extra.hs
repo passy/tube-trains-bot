@@ -2,6 +2,7 @@ module Data.Vector.Extra
   ( mapMaybe
   ) where
 
+import Prelude
 import Data.Vector as V
 import Data.Vector.Generic
 import Data.Vector.Fusion.Stream.Monadic
