@@ -21,7 +21,6 @@ import qualified Data.Vector as Vector
 import qualified Data.Vector.Extra as Vector
 import qualified Network.Wreq as Wreq
 
-import qualified Config
 import qualified Common
 
 import Control.Lens
@@ -48,16 +47,15 @@ stationUrl :: Format.Format
 stationUrl =
   "https://citymapper.com/api/1/metrodepartures?headways=1&ids={}&region_id=uk-london"
 
-mkUrlForStation :: Config.Config -> Maybe Text -> Text
-mkUrlForStation Config.Config {Config.defaultStation} stationName =
-  let station = fromMaybe (toStrict defaultStation) stationName
-  in toStrict $ Format.format stationUrl (Format.Only station)
+mkUrlForStation :: Text -> Text
+mkUrlForStation stationName =
+  toStrict $ Format.format stationUrl (Format.Only stationName)
 
 loadDeparturesForStation
   :: MonadIO m
-  => Config.Config -> Maybe Text -> m (Maybe DepartureMap)
-loadDeparturesForStation config stationName = do
-  let url = mkUrlForStation config stationName
+  => Text -> m (Maybe DepartureMap)
+loadDeparturesForStation stationName = do
+  let url = mkUrlForStation stationName
   r <- liftIO . Wreq.get $ T.unpack url
   return . parseDepartures $ r ^. Wreq.responseBody
 

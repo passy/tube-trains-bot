@@ -142,12 +142,12 @@ fulfillDepartureReq
   => Config.Config
   -> WebhookRequest
   -> m Common.WebhookFulfillment
-fulfillDepartureReq c wh = do
+fulfillDepartureReq c@Config.Config{Config.defaultStation} wh = do
   let params = _parameters . _result $ wh
   let dir' = fromMaybe Common.Spellbound $ _direction params
-  let station' = _station params
+  let station' = fromMaybe (toStrict defaultStation) $ _station params
   Logger.logInfoN $ "departureReq: " <> show params
-  res <- Api.loadDeparturesForStation c station'
+  res <- Api.loadDeparturesForStation station'
   let resp =
         Response.runResponse (Response.mkCoResponse c) $
         do maybe
@@ -155,7 +155,7 @@ fulfillDepartureReq c wh = do
              Response.departures
              res
            whenIsJust (Common.LineName <$> _line params) Response.line
-           whenIsJust (Common.StationName <$> station') Response.station
+           Response.station $ Common.StationName station'
            Response.direction dir'
 
   Logger.logInfoN $ "departureResp: " <> show resp
