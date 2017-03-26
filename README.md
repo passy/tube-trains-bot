@@ -9,7 +9,15 @@ that provides live departure times through a Google Home.
 
 This is deployed and live! If you have a Google Home, ask activate it by saying
 
-"Hey Google, let me talk to Tube Trains."
+> Hey Google, let me talk to Tube Trains.
+
+You can also ask it in one go:
+
+> Hey Google, ask Tube Trains about the next departures from Euston Square.
+
+Or something a bit more involved:
+
+> Hey Google, at Tube Trains, tell me about the next eastbound departures on the Hammersmith & City Line from Aldgate East.
 
 You can see it in action here:
 
