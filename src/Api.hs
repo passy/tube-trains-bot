@@ -47,13 +47,13 @@ stationUrl :: Format.Format
 stationUrl =
   "https://citymapper.com/api/1/metrodepartures?headways=1&ids={}&region_id=uk-london"
 
-mkUrlForStation :: Text -> Text
-mkUrlForStation stationName =
+mkUrlForStation :: Common.StationName -> Text
+mkUrlForStation (Common.StationName stationName) =
   toStrict $ Format.format stationUrl (Format.Only stationName)
 
 loadDeparturesForStation
   :: MonadIO m
-  => Text -> m (Maybe DepartureMap)
+  => Common.StationName -> m (Maybe DepartureMap)
 loadDeparturesForStation stationName = do
   let url = mkUrlForStation stationName
   r <- liftIO . Wreq.get $ T.unpack url

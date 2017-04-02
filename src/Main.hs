@@ -145,7 +145,7 @@ fulfillDepartureReq
 fulfillDepartureReq c@Config.Config{Config.defaultStation} wh = do
   let params = _parameters . _result $ wh
   let dir' = fromMaybe Common.Spellbound $ _direction params
-  let station' = fromMaybe (toStrict defaultStation) $ _station params
+  let station' = Common.StationName $ fromMaybe (toStrict defaultStation) $ _station params
   Logger.logInfoN $ "departureReq: " <> show params
   res <- Api.loadDeparturesForStation station'
   let resp =
@@ -155,7 +155,7 @@ fulfillDepartureReq c@Config.Config{Config.defaultStation} wh = do
              Response.departures
              res
            whenIsJust (Common.LineName <$> _line params) Response.line
-           Response.station $ Common.StationName station'
+           Response.station station'
            Response.direction dir'
 
   Logger.logInfoN $ "departureResp: " <> show resp
