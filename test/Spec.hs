@@ -7,13 +7,13 @@ import System.FilePath ((</>))
 import Data.String (String)
 
 import qualified Data.Aeson as Aeson
-import qualified Data.Aeson.Types as Aeson
 import qualified Data.ByteString.Lazy as BS
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import qualified Data.Text.IO as TIO
 
 import qualified Api
+import qualified VersionInfo
 
 import Test.Hspec
 
@@ -49,3 +49,17 @@ main = hspec $ do
             dp = Aeson.eitherDecode resp
 
         dp `shouldSatisfy` isLeft
+
+    describe "Version Info" $ do
+
+      it "formats major version" $ do
+        VersionInfo.formatGhcVersion 800 `shouldBe` Just "8.0"
+
+      it "formats minor version" $ do
+        VersionInfo.formatGhcVersion 801 `shouldBe` Just "8.1"
+
+      it "formats double-decimal version" $ do
+        VersionInfo.formatGhcVersion 820 `shouldBe` Just "8.20"
+
+      it "formats trailing zero" $ do
+        VersionInfo.formatGhcVersion 710 `shouldBe` Just "7.10"

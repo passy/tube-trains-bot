@@ -1,12 +1,15 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module VersionInfo
   ( compilerVersionName
   , programVersion
+  , formatGhcVersion
   ) where
 
 import Protolude
+import qualified Data.Digits as Digits
 import qualified Data.Text as T
 import qualified Data.Version as Version
 import qualified Paths_tube_bot_fulfillment as Paths
@@ -20,12 +23,17 @@ versionNumber = Nothing
 
 compilerVersionName :: Text
 compilerVersionName =
-  case versionNumber of
-    Just a -> "the Glorious Haskell Compiler version " <> formatVersion a
+  case formatGhcVersion =<< versionNumber of
+    Just a -> "the Glorious Haskell Compiler version " <> a
     Nothing -> "an unknown Haskell Compiler"
-  where
-    formatVersion :: Int -> Text
-    formatVersion = T.intersperse '.' . show
+
+formatGhcVersion :: Int -> Maybe Text
+formatGhcVersion versionNum = do
+  let digits = Digits.digits 10 versionNum
+  (x:y:z:_) <- return digits
+  return $ T.intercalate "." $ show <$> case y of
+    0 -> [x, z]
+    _ -> [x, y * 10 + z]
 
 programVersion :: Text
 programVersion = T.pack . Version.showVersion $ Paths.version

@@ -31,6 +31,7 @@ dependencies:
   - aeson
   - bytestring
   - dhall
+  - digits
   - free
   - hashable
   - lens
@@ -51,6 +52,7 @@ library:
   source-dirs: src
   exposed-modules:
     - Api
+    - VersionInfo
 
 executables:
   tube-bot-fulfillment:
