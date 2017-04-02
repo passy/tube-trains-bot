@@ -142,24 +142,27 @@ fulfillDepartureReq
   => Config.Config
   -> WebhookRequest
   -> m Common.WebhookFulfillment
-fulfillDepartureReq c@Config.Config{Config.defaultStation} wh = do
+fulfillDepartureReq c wh = do
   let params = _parameters . _result $ wh
-  let dir' = fromMaybe Common.Spellbound $ _direction params
-  let station' = Common.StationName $ fromMaybe (toStrict defaultStation) $ _station params
   Logger.logInfoN $ "departureReq: " <> show params
-  res <- Api.loadDeparturesForStation station'
-  let resp =
-        Response.runResponse (Response.mkCoResponse c) $
-        do maybe
-             (Response.abort $ Common.FulfillmentError "Sorry, I couldn't find any trains right now.")
-             Response.departures
-             res
-           whenIsJust (Common.LineName <$> _line params) Response.line
-           Response.station station'
-           Response.direction dir'
 
-  Logger.logInfoN $ "departureResp: " <> show resp
-  return resp
+  let dir' = fromMaybe Common.Spellbound $ _direction params
+  let resp :: MonadIO m => m (Response.Response ())
+      resp =
+        case Common.StationName <$> _station params of
+          Nothing -> return $ Response.abort $ Common.FulfillmentError "Apologies, I couldn't find the station you requested."
+          Just station' -> do
+            res <- Api.loadDeparturesForStation station'
+            return $ do
+              maybe (Response.abort $ Common.FulfillmentError "Sorry, I couldn't find any trains right now.") Response.departures res
+              whenIsJust (Common.LineName <$> _line params) Response.line
+              Response.station station'
+              Response.direction dir'
+
+  resp' <- Response.runResponse (Response.mkCoResponse c) <$> resp
+  Logger.logInfoN $ "departureResp: " <> show resp'
+
+  return resp'
 
 -- Turn the server into a WAI app. 'serve' is provided by servant,
 -- more precisely by the Servant.Server module.

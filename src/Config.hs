@@ -7,7 +7,7 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
 module Config
-  ( Config(Config, port, defaultStation, maxDeparturesPerDirection)
+  ( Config(Config, port, maxDeparturesPerDirection)
   , loadConfig
   ) where
 
@@ -16,7 +16,6 @@ import qualified Dhall
 
 data Config = Config
   { port :: Integer
-  , defaultStation :: Dhall.Text
   , maxDeparturesPerDirection :: Integer
   } deriving (Generic, Show, Dhall.Interpret)
 

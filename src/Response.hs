@@ -92,10 +92,9 @@ runResponse
 runResponse coresp resp = format $ pair const coresp resp
   where
     format ResponseState{..} =
-      let station' = maybe (Common.StationName . toStrict $ Config.defaultStation _sConfig) identity _sStation
-      in case _sError of
+      case _sError of
         Just (Common.FulfillmentError err) -> Common.mkFulfillment err
-        Nothing -> filterDepartures _sConfig _sDirection station' _sLine _sDepartures
+        Nothing -> filterDepartures _sConfig _sDirection _sStation _sLine _sDepartures
 
 -- * Comonad for the Response DSL
 
@@ -141,7 +140,7 @@ coDeparture :: ResponseState -> Common.Direction -> Api.Departure -> ResponseSta
 coDeparture s dir departure' =
   -- This warrants a bit of documentation:
   -- `sDepartures` is the lens obviously, `at dir` works on the hashmap but gives
-  -- us a Maybe, using a _Just prism would work, but then we wouldn't append if it was
+  -- us a Maybe. Using a _Just prism would work, but then we wouldn't append if it was
   -- Nothing, so we want to supply a default value, which is exactly what the `non` iso
   -- does. `<>~` `mappend`s a new value and even sets it to Just if neccessary.
   -- Cool? Cool.
@@ -183,7 +182,7 @@ filterLine (Common.LineName l) ds =
 filterDepartures
   :: Config.Config
   -> Common.Direction
-  -> Common.StationName
+  -> Maybe Common.StationName
   -> Maybe Common.LineName
   -> Api.DepartureMap
   -> Common.WebhookFulfillment
@@ -191,13 +190,15 @@ filterDepartures c dir station' mline d =
   -- Filter by line if filter is provided
   let d' = HMS.mapMaybe (maybe pure filterLine mline) d
   in
-    Common.mkFulfillment $ case (null d', HMS.lookup dir d') of
-      (True, _) -> "I could not find any departures for the given parameters."
+    Common.mkFulfillment $ case (null d', station', HMS.lookup dir d') of
+      (True, _, _) -> "I could not find any departures for the given parameters."
+      -- There was no station specified
+      (False, Nothing, _) -> "I'm not sure which station to look for."
       -- We found departures for the specified direction.
-      (False, Just ds) -> formatDepartures c dir station' ds
+      (False, Just s, Just ds) -> formatDepartures c dir s ds
       -- We can't filter by direction, so we'll list them all.
-      (False, Nothing) ->
-        let go m k v = formatDepartures c k station' v : m
+      (False, Just s, Nothing) ->
+        let go m k v = formatDepartures c k s v : m
             l = HMS.foldlWithKey' go empty d'
         in T.unwords l
 
