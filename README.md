@@ -40,6 +40,8 @@ stack exec tube-bot-fulfillment
 curl -vv 'http://localhost:8001/webhook' -XPOST -H "Content-Type: application/json" -d @data/test_req.json
 ```
 
+There's also a small test suite you can run with `stack test`.
+
 ### Building the docker image
 
 There's a Docker image for easier deployment, which simply wraps a statically linked
