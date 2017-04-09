@@ -202,6 +202,8 @@ filterDepartures c dir station' mline d =
             l = HMS.foldlWithKey' go empty d'
         in T.unwords l
 
+-- * Formatters to make things understandable to the user.
+
 -- TODO: Refactor this. The arity is WAY TOO HIGH!
 formatDepartures :: Config.Config -> Common.Direction -> Common.StationName -> [Api.Departure] -> Text
 formatDepartures _ Common.Spellbound _ [] =

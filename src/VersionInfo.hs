@@ -27,6 +27,8 @@ compilerVersionName =
     Just a -> "the Glorious Haskell Compiler version " <> a
     Nothing -> "an unknown Haskell Compiler"
 
+-- | Turn the '__GLASGOW_HASKELL__' integer into something
+-- users are used to reading.
 formatGhcVersion :: Int -> Maybe Text
 formatGhcVersion versionNum = do
   let digits = Digits.digits 10 versionNum
@@ -35,5 +37,6 @@ formatGhcVersion versionNum = do
     0 -> [x, z]
     _ -> [x, y * 10 + z]
 
+-- | Get the current Cabal version of this package.
 programVersion :: Text
 programVersion = T.pack . Version.showVersion $ Paths.version
