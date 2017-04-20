@@ -14,6 +14,9 @@ import qualified Data.Text.IO as TIO
 
 import qualified Api
 import qualified VersionInfo
+import qualified Common
+import qualified Response
+import qualified Config
 
 import Test.Hspec
 
@@ -25,6 +28,12 @@ readFixture path = do
 superUnsafeParse :: Aeson.FromJSON a => BS.ByteString -> a
 superUnsafeParse = either (error . T.pack) identity . Aeson.eitherDecode
 
+testConfig :: Config.Config
+testConfig =
+  Config.Config { Config.port = 1024
+                , Config.maxDeparturesPerDirection = 3
+                }
+
 main :: IO ()
 main = hspec $ do
   describe "Tube Bot" $ do
@@ -33,6 +42,18 @@ main = hspec $ do
       it "parses a search response" $ do
         resp <- readFixture "metrodepartures.json"
         Api.parseDepartures resp `shouldSatisfy` isJust
+
+      it "doesn't regress on london bridge" $ do
+        fixt <- readFixture "lbridge_departures.json"
+        Just res <- return $ Api.parseDepartures fixt
+        let resp = do
+              Response.departures res
+              Response.station $ Common.StationName "LondonBridge"
+              Response.direction $ Common.Spellbound
+
+        let resp' = Response.runResponse (Response.mkCoResponse testConfig) resp
+        Common._speech resp' `shouldNotBe` "I could not find any departures for the given parameters."
+
 
       it "parses a departure" $ do
         resp <- readFixture "singledeparture.json"
