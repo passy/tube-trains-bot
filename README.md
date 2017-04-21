@@ -5,6 +5,8 @@
 Fulfilment for an [api.ai](https://api.ai/) -powered [Actions on Google](https://developers.google.com/actions/) integration
 that provides live departure times through a Google Home.
 
+<img src="https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png" align="right" width=150 />
+
 ## Using
 
 This is deployed and live! If you have a Google Home, ask activate it by saying
