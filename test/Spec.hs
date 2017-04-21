@@ -8,12 +8,16 @@ import Data.String (String)
 
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy as BS
+import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import qualified Data.Text.IO as TIO
 
 import qualified Api
 import qualified VersionInfo
+import qualified Common
+import qualified Response
+import qualified Config
 
 import Test.Hspec
 
@@ -25,6 +29,12 @@ readFixture path = do
 superUnsafeParse :: Aeson.FromJSON a => BS.ByteString -> a
 superUnsafeParse = either (error . T.pack) identity . Aeson.eitherDecode
 
+testConfig :: Config.Config
+testConfig =
+  Config.Config { Config.port = 1024
+                , Config.maxDeparturesPerDirection = 3
+                }
+
 main :: IO ()
 main = hspec $ do
   describe "Tube Bot" $ do
@@ -33,6 +43,22 @@ main = hspec $ do
       it "parses a search response" $ do
         resp <- readFixture "metrodepartures.json"
         Api.parseDepartures resp `shouldSatisfy` isJust
+
+      it "handle time-less responses" $ do
+        fixt <- readFixture "lbridge_departures_notimes.json"
+        Just res <- return $ Api.parseDepartures fixt
+        res `shouldBe` HMS.empty
+
+      it "procudes a full response" $ do
+        fixt <- readFixture "lbridge_departures.json"
+        Just res <- return $ Api.parseDepartures fixt
+        let resp = do
+              Response.departures res
+              Response.station $ Common.StationName "LondonBridge"
+              Response.direction $ Common.Spellbound
+
+        let resp' = Response.runResponse (Response.mkCoResponse testConfig) resp
+        Common._speech resp' `shouldBe` "I found the following Eastbound departures from  London Bridge: Jubilee line to \"Stratford\" in less than a minute. Jubilee line to \"West Ham\" in 2 minutes. Jubilee line to \"Stratford\" in 4 minutes. I found the following Westbound departures from  London Bridge: Jubilee line to \"Stanmore\" in 1 minutes. Jubilee line to \"Stanmore\" in 3 minutes. Jubilee line to \"Willesden Green\" in 5 minutes."
 
       it "parses a departure" $ do
         resp <- readFixture "singledeparture.json"

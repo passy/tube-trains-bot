@@ -52,6 +52,9 @@ library:
   source-dirs: src
   exposed-modules:
     - Api
+    - Common
+    - Config
+    - Response
     - VersionInfo
 
 executables:
