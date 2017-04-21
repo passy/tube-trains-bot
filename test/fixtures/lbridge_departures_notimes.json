@@ -1,0 +1,503 @@
+{
+    "last_updated_time": "2017-04-20T21:26:55+01:00",
+    "stations": [
+        {
+            "routes": [
+                {
+                    "status": {
+                        "summary": "Minor Delays",
+                        "description": "Jubilee Line: Minor delays due to an earlier signal failure at Baker Street and a customer incident. ",
+                        "level": 1
+                    },
+                    "supports_routeinfo": true,
+                    "name": "Jubilee",
+                    "color": "#868F98",
+                    "brand": "Underground",
+                    "live_line_code": "Jubilee",
+                    "text_color": "#FFFFFF",
+                    "icon_name": "uk-london-tube-jubilee",
+                    "icon_contains_name": false,
+                    "ui_color": "#868F98",
+                    "aliases": [
+                        "jubilee"
+                    ]
+                },
+                {
+                    "status": {
+                        "summary": "Good Service",
+                        "description": "",
+                        "level": 0
+                    },
+                    "supports_routeinfo": true,
+                    "name": "Northern",
+                    "color": "#000000",
+                    "brand": "Underground",
+                    "live_line_code": "Northern",
+                    "text_color": "#FFFFFF",
+                    "icon_name": "uk-london-tube-northern",
+                    "icon_contains_name": false,
+                    "ui_color": "#000000",
+                    "aliases": [
+                        "northern"
+                    ]
+                }
+            ],
+            "sections": [
+                {
+                    "departure_groupings": [
+                        {
+                            "grouping_id": "Platform_LondonBridge_J_dSE__Eastbound",
+                            "schedule_grouping_id": "Platform_LondonBridge_J_dSE__Eastbound",
+                            "advertised_route_ids": [
+                                "Jubilee"
+                            ],
+                            "departures": [
+                                {
+                                    "scheduled_time": "2017-04-20T21:28:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stratford",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:29:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stratford",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:33:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stratford",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:34:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stratford",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:38:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "North Greenwich",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:39:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stratford",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:43:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stratford",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:44:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stratford",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:48:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stratford",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:49:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stratford",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                }
+                            ],
+                            "direction_name": "Eastbound"
+                        },
+                        {
+                            "grouping_id": "Platform_LondonBridge_J_dW__Westbound",
+                            "schedule_grouping_id": "Platform_LondonBridge_J_dW__Westbound",
+                            "advertised_route_ids": [
+                                "Jubilee"
+                            ],
+                            "departures": [
+                                {
+                                    "scheduled_time": "2017-04-20T21:29:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Wembley Park",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:31:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stanmore",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:34:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stanmore",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:36:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stanmore",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:39:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Wembley Park",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:41:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stanmore",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:44:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stanmore",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:46:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stanmore",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:49:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Wembley Park",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-20T21:51:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stanmore",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                }
+                            ],
+                            "direction_name": "Westbound"
+                        }
+                    ],
+                    "id": "LondonBridge_Jubilee",
+                    "departure_types": [
+                        "now"
+                    ],
+                    "name": "Departures"
+                },
+                {
+                    "departure_groupings": [
+                        {
+                            "direction_name": "Northbound",
+                            "platform_name": "pl. 1",
+                            "schedule_grouping_id": "Platform_LondonBridge_N_dN__Northbound (Bank Branch)",
+                            "advertised_route_ids": [
+                                "Northern"
+                            ],
+                            "departures": [
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Edgware via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 131,
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Edgware via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 221,
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "High Barnet via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_10__Stations",
+                                    "time_seconds": 281,
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Edgware via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 461,
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "High Barnet via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_10__Stations",
+                                    "time_seconds": 761,
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Edgware via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 1001,
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "High Barnet via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_10__Stations",
+                                    "time_seconds": 1301,
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Edgware via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 1481,
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "High Barnet via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_10__Stations",
+                                    "time_seconds": 1721,
+                                    "direction_id": "1"
+                                }
+                            ],
+                            "grouping_id": "Platform_LondonBridge_N_dN_pl. 1_Northbound"
+                        },
+                        {
+                            "direction_name": "Southbound",
+                            "platform_name": "pl. 2",
+                            "schedule_grouping_id": "Platform_LondonBridge_N_dSW__Southbound (Bank Branch)",
+                            "advertised_route_ids": [
+                                "Northern"
+                            ],
+                            "departures": [
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 11,
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 131,
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 161,
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 461,
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 581,
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 701,
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 881,
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 1001,
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 1241,
+                                    "direction_id": "0"
+                                },
+                                {
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden via Bank",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "time_seconds": 1421,
+                                    "direction_id": "0"
+                                }
+                            ],
+                            "grouping_id": "Platform_LondonBridge_N_dSW_pl. 2_Southbound"
+                        }
+                    ],
+                    "id": "LondonBridge_Northern",
+                    "departure_types": [
+                        "now"
+                    ],
+                    "name": "Departures"
+                },
+                {
+                    "departure_groupings": [
+                        {
+                            "direction_name": "Eastbound",
+                            "schedule_grouping_id": "Platform_LondonBridge_J_dSE__Eastbound",
+                            "not_next_departures": true,
+                            "departures": [
+                                {
+                                    "scheduled_time": "2017-04-21T00:55:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stratford",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "1"
+                                }
+                            ],
+                            "advertised_route_ids": [
+                                "Jubilee"
+                            ],
+                            "grouping_id": "Platform_LondonBridge_J_dSE__Eastbound_Last_Metro"
+                        },
+                        {
+                            "direction_name": "Westbound",
+                            "schedule_grouping_id": "Platform_LondonBridge_J_dW__Westbound",
+                            "not_next_departures": true,
+                            "departures": [
+                                {
+                                    "scheduled_time": "2017-04-21T00:27:00+01:00",
+                                    "route_id": "Jubilee",
+                                    "destination_name": "Stanmore",
+                                    "pattern_id": "1Jub_Y05140800_0_3__Stations",
+                                    "direction_id": "0"
+                                }
+                            ],
+                            "advertised_route_ids": [
+                                "Jubilee"
+                            ],
+                            "grouping_id": "Platform_LondonBridge_J_dW__Westbound_Last_Metro"
+                        }
+                    ],
+                    "id": "LondonBridge_Jubilee_Last_Metro",
+                    "departure_types": [
+                        "last"
+                    ],
+                    "name": "Last Trains — Tonight"
+                },
+                {
+                    "departure_groupings": [
+                        {
+                            "direction_name": "Northbound (Bank Branch)",
+                            "schedule_grouping_id": "Platform_LondonBridge_N_dN__Northbound (Bank Branch)",
+                            "not_next_departures": true,
+                            "departures": [
+                                {
+                                    "scheduled_time": "2017-04-21T00:22:00+01:00",
+                                    "route_id": "Northern",
+                                    "destination_name": "Edgware",
+                                    "pattern_id": "1Ntn_Y05560800_0_1__Stations",
+                                    "direction_id": "1"
+                                },
+                                {
+                                    "scheduled_time": "2017-04-21T00:32:00+01:00",
+                                    "route_id": "Northern",
+                                    "destination_name": "High Barnet",
+                                    "pattern_id": "1Ntn_Y05560800_0_10__Stations",
+                                    "direction_id": "1"
+                                }
+                            ],
+                            "advertised_route_ids": [
+                                "Northern"
+                            ],
+                            "grouping_id": "Platform_LondonBridge_N_dN__Northbound (Bank Branch)_Last_Metro"
+                        },
+                        {
+                            "direction_name": "Southbound (Bank Branch)",
+                            "schedule_grouping_id": "Platform_LondonBridge_N_dSW__Southbound (Bank Branch)",
+                            "not_next_departures": true,
+                            "departures": [
+                                {
+                                    "scheduled_time": "2017-04-21T00:40:00+01:00",
+                                    "route_id": "Northern",
+                                    "destination_name": "Morden",
+                                    "pattern_id": "1Ntn_Y05560800_0_10__Stations",
+                                    "direction_id": "0"
+                                }
+                            ],
+                            "advertised_route_ids": [
+                                "Northern"
+                            ],
+                            "grouping_id": "Platform_LondonBridge_N_dSW__Southbound (Bank Branch)_Last_Metro"
+                        }
+                    ],
+                    "id": "LondonBridge_Northern_Last_Metro",
+                    "departure_types": [
+                        "last"
+                    ],
+                    "name": "Last Trains — Tonight"
+                }
+            ],
+            "station": {
+                "status": {
+                    "level": 0,
+                    "description": "",
+                    "summary": "Open"
+                },
+                "name": "London Bridge",
+                "coords": [
+                    51.505499,
+                    -0.086922
+                ],
+                "brands": [
+                    "Underground",
+                    "NationalRail",
+                    "NationalRailBus"
+                ],
+                "live_code": "LondonBridge",
+                "route_icon_names": [
+                    "uk-london-tube-jubilee",
+                    "uk-london-tube-northern",
+                    "uk-london-rail"
+                ]
+            },
+            "messages": []
+        }
+    ]
+}

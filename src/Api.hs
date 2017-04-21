@@ -85,4 +85,4 @@ parseDepartures r =
     extractDepartures = Aeson.withObject "departure" $ \o -> (,) <$> o .: "direction_name" <*> o .: "departures"
 
     extractDepartures' :: Aeson.Value -> Maybe (Common.Direction, [Departure])
-    extractDepartures' v = Aeson.parseMaybe extractDepartures v
+    extractDepartures' = Aeson.parseMaybe extractDepartures
