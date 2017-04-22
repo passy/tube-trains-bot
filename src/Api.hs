@@ -59,10 +59,11 @@ loadDeparturesForStation stationName = do
   r <- liftIO . Wreq.get $ T.unpack url
   return . parseDepartures $ r ^. Wreq.responseBody
 
-parseDepartures
-  :: BS.ByteString
+parseDeparturesWith
+  :: (Aeson.Value -> Maybe (Common.Direction, [Departure]))
+  -> BS.ByteString
   -> Maybe DepartureMap
-parseDepartures r =
+parseDeparturesWith f r =
   -- TODO: This is super fragile. I should at iterate and find the right depature groupings. The first
   -- part appears to be fixed. I'm sure there's some cool Lens shit for this.
   let groupings :: Maybe (Vector.Vector Aeson.Value)
@@ -75,14 +76,15 @@ parseDepartures r =
            . _Array
 
       departures :: Maybe (Vector.Vector (Common.Direction, [Departure]))
-      departures = Vector.mapMaybe identity . fmap extractDepartures' <$> groupings
+      departures = Vector.mapMaybe identity . fmap f <$> groupings
 
   in
     HMS.fromList . Vector.toList <$> departures
 
-  where
-    extractDepartures :: Aeson.Value -> Aeson.Parser (Common.Direction, [Departure])
-    extractDepartures = Aeson.withObject "departure" $ \o -> (,) <$> o .: "direction_name" <*> o .: "departures"
+extractDepartures :: Aeson.Value -> Aeson.Parser (Common.Direction, [Departure])
+extractDepartures = Aeson.withObject "departure" $ \o -> (,) <$> o .: "direction_name" <*> o .: "departures"
 
-    extractDepartures' :: Aeson.Value -> Maybe (Common.Direction, [Departure])
-    extractDepartures' = Aeson.parseMaybe extractDepartures
+parseDepartures
+  :: BS.ByteString
+  -> Maybe DepartureMap
+parseDepartures = parseDeparturesWith $ Aeson.parseMaybe extractDepartures
