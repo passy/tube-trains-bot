@@ -18,7 +18,6 @@ import qualified Data.HashMap.Strict as HMS
 import qualified Data.Text as T
 import qualified Data.Text.Format as Format
 import qualified Data.Vector as Vector
-import qualified Data.Vector.Extra as Vector
 import qualified Network.Wreq as Wreq
 
 import qualified Common
