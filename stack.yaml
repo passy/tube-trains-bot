@@ -3,6 +3,6 @@ extra-package-dbs: []
 packages:
 - '.'
 extra-deps:
-- dhall-1.5.0
+- dhall-1.5.1
 - optparse-generic-1.1.5
-resolver: lts-9.0
+resolver: lts-9.1
