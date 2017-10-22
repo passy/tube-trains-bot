@@ -37,7 +37,6 @@ dependencies:
   - lens
   - lens-aeson
   - monad-logger
-  - mtl
   - protolude
   - servant-server
   - text
