@@ -1,4 +1,4 @@
-# Tube Trains - Google Home Action
+# Tube Trains - Google Home Action [![Build Status](https://travis-ci.org/passy/tube-trains-bot.svg?branch=master)](https://travis-ci.org/passy/tube-trains-bot)
 
 <img src="assets/smol.png" align="left" />
 
