@@ -1,40 +1,42 @@
 {
-  "id": "ac9c34ef-f3cb-4e7a-923c-f74bfe1f0898",
-  "timestamp": "2016-12-10T23:53:40.911Z",
+  "id": "ead24e62-1910-431c-9dd6-38a3d9c7e8b1",
+  "timestamp": "2017-11-15T23:17:57.458Z",
+  "lang": "en",
   "result": {
     "source": "agent",
-    "resolvedQuery": "Give me eastbound departures for Hammersmith and City.",
-    "speech": "",
+    "resolvedQuery": "Give me eastbound departures from Tower Hill.",
     "action": "list-departures",
     "actionIncomplete": false,
     "parameters": {
-      "line": "hammersmith and city",
-      "direction": "eastbound"
+      "direction": "eastbound",
+      "line": "",
+      "station": "TowerHill"
     },
-    "contexts": [
-
-    ],
+    "contexts": [],
     "metadata": {
       "intentId": "aef959da-ad17-449d-b8ec-56548336f666",
       "webhookUsed": "true",
       "webhookForSlotFillingUsed": "false",
+      "webhookResponseTime": 1160,
       "intentName": "request-departures"
     },
     "fulfillment": {
-      "speech": "I found these departures for eastbound hammersmith and city line trains: ...",
+      "speech": "I could not find any departures for the given parameters.",
+      "source": "tube-bot-fulfillment",
+      "displayText": "I could not find any departures for the given parameters.",
       "messages": [
         {
           "type": 0,
-          "speech": "I found these departures for eastbound hammersmith and city line trains: ..."
+          "speech": "I could not find any departures for the given parameters."
         }
       ]
     },
-    "score": 1.0
+    "score": 0.9300000071525574
   },
   "status": {
     "code": 200,
-    "errorType": "success"
+    "errorType": "success",
+    "webhookTimedOut": false
   },
-  "sessionId": "cddaf807-1305-42ff-bc0b-311be889c911",
-  "originalRequest": null
+  "sessionId": "dd1535ed-276f-4e41-ac89-226429ebcdc6"
 }
