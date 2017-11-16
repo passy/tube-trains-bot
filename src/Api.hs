@@ -19,6 +19,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Format as Format
 import qualified Data.Vector as Vector
 import qualified Network.Wreq as Wreq
+import qualified Control.Monad.Logger as Logger
 
 import qualified Common
 
@@ -51,10 +52,11 @@ mkUrlForStation (Common.StationName stationName) =
   toStrict $ Format.format stationUrl (Format.Only stationName)
 
 loadDeparturesForStation
-  :: MonadIO m
+  :: (MonadIO m, Logger.MonadLogger m)
   => Common.StationName -> m (Maybe DepartureMap)
 loadDeparturesForStation stationName = do
   let url = mkUrlForStation stationName
+  Logger.logDebugN $ "loading url " <> show url
   r <- liftIO . Wreq.get $ T.unpack url
   return . parseDepartures $ r ^. Wreq.responseBody
 

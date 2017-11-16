@@ -145,7 +145,7 @@ fulfillDepartureReq c wh = do
   Logger.logInfoN $ "departureReq: " <> show params
 
   let dir' = fromMaybe Common.Spellbound $ _direction params
-  let resp :: MonadIO m => m (Response.Response ())
+  let resp :: (MonadIO m, Logger.MonadLogger m) => m (Response.Response ())
       resp =
         case Common.StationName <$> _station params of
           Nothing -> return $ Response.abort $ Common.FulfillmentError "Apologies, I couldn't find the station you requested."
