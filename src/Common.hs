@@ -12,7 +12,7 @@ module Common
   , formatDirection
   ) where
 
-import Protolude hiding ((<>))
+import Protolude
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
 import qualified Data.Hashable as Hashable
