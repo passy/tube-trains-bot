@@ -27,7 +27,7 @@ readFixture path = do
     BS.fromStrict . TE.encodeUtf8 <$> TIO.readFile (dir </> "test" </> "fixtures" </> path)
 
 superUnsafeParse :: Aeson.FromJSON a => BS.ByteString -> a
-superUnsafeParse = either (error . T.pack) identity . Aeson.eitherDecode
+superUnsafeParse = either (panic . T.pack) identity . Aeson.eitherDecode
 
 testConfig :: Config.Config
 testConfig =
