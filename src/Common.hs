@@ -13,7 +13,6 @@ module Common
   ) where
 
 import Protolude
-import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
 import qualified Data.Hashable as Hashable
 import qualified Data.Text as T
