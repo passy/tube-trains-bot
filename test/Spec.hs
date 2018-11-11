@@ -49,12 +49,23 @@ main = hspec $ do
         Just res <- return $ Api.parseDepartures fixt
         res `shouldBe` HMS.empty
 
-      it "procudes a full response" $ do
+      it "provides a full response" $ do
         fixt <- readFixture "lbridge_departures.json"
         Just res <- return $ Api.parseDepartures fixt
         let resp = do
               Response.departures res
               Response.station $ Common.StationName "LondonBridge"
+              Response.direction $ Common.Spellbound
+
+        let resp' = Response.runResponse (Response.mkCoResponse testConfig) resp
+        Common._speech resp' `shouldBe` "I found the following Eastbound departures from  London Bridge: Jubilee line to \"Stratford\" in less than a minute. Jubilee line to \"West Ham\" in 2 minutes. Jubilee line to \"Stratford\" in 4 minutes. I found the following Westbound departures from  London Bridge: Jubilee line to \"Stanmore\" in 1 minutes. Jubilee line to \"Stanmore\" in 3 minutes. Jubilee line to \"Willesden Green\" in 5 minutes."
+
+      it "provides a full response for aldgate east" $ do
+        fixt <- readFixture "aldgateeast_departures.json"
+        Just res <- return $ Api.parseDepartures fixt
+        let resp = do
+              Response.departures res
+              Response.station $ Common.StationName "AldgateEast"
               Response.direction $ Common.Spellbound
 
         let resp' = Response.runResponse (Response.mkCoResponse testConfig) resp
