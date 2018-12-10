@@ -63,7 +63,7 @@ main = hspec $ do
       it "provides a full response for aldgate east" $ do
         fixt <- readFixture "aldgateeast_departures.json"
         Just res <- return $ Api.parseDepartures fixt
-        length res `shouldBe` 5
+        length res `shouldBe` 2
         let resp = do
               Response.departures res
               Response.station $ Common.StationName "AldgateEast"

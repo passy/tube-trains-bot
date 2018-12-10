@@ -83,7 +83,12 @@ parseDeparturesWith f r =
     HMS.fromList . Vector.toList <$> departures
 
 extractDepartures :: Aeson.Value -> Aeson.Parser (Common.Direction, [Departure])
-extractDepartures = Aeson.withObject "departure" $ \o -> (,) <$> o .: "direction_name" <*> o .: "departures"
+extractDepartures = Aeson.withObject "departure" $ \o -> do
+  directionName <- o .: "direction_name"
+  -- Manually parse individual list items so we can filter individual ones
+  -- we cannot parse out without failing the entire parser.
+  departures <- catMaybes <$> fmap (Aeson.parseMaybe Aeson.parseJSON) <$> o .: "departures"
+  pure (directionName, departures)
 
 parseDepartures
   :: BS.ByteString
