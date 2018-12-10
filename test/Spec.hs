@@ -49,7 +49,7 @@ main = hspec $ do
         Just res <- return $ Api.parseDepartures fixt
         res `shouldBe` HMS.empty
 
-      it "procudes a full response" $ do
+      it "provides a full response" $ do
         fixt <- readFixture "lbridge_departures.json"
         Just res <- return $ Api.parseDepartures fixt
         let resp = do
@@ -60,6 +60,18 @@ main = hspec $ do
         let resp' = Response.runResponse (Response.mkCoResponse testConfig) resp
         Common._speech resp' `shouldBe` "I found the following Eastbound departures from  London Bridge: Jubilee line to \"Stratford\" in less than a minute. Jubilee line to \"West Ham\" in 2 minutes. Jubilee line to \"Stratford\" in 4 minutes. I found the following Westbound departures from  London Bridge: Jubilee line to \"Stanmore\" in 1 minutes. Jubilee line to \"Stanmore\" in 3 minutes. Jubilee line to \"Willesden Green\" in 5 minutes."
 
+      it "provides a full response for aldgate east" $ do
+        fixt <- readFixture "aldgateeast_departures.json"
+        Just res <- return $ Api.parseDepartures fixt
+        length res `shouldBe` 2
+        let resp = do
+              Response.departures res
+              Response.station $ Common.StationName "AldgateEast"
+              Response.direction $ Common.Spellbound
+
+        let resp' = Response.runResponse (Response.mkCoResponse testConfig) resp
+        Common._speech resp' `shouldBe` "I found the following Eastbound departures from  Aldgate East: District line to \"Upminster\" in 9 minutes. District line to \"Upminster\" in 10 minutes. District line to \"Upminster\" in 13 minutes. I found the following Westbound departures from  Aldgate East: Hammersmith And City line to \"Hammersmith\" in 6 minutes. District line to \"Ealing Broadway\" in 14 minutes. District line to \"Richmond\" in 16 minutes."
+
       it "parses a departure" $ do
         resp <- readFixture "singledeparture.json"
         let dp :: Api.Departure
@@ -68,6 +80,15 @@ main = hspec $ do
         Api.departureLine dp `shouldBe` "District"
         Api.departureDestination dp `shouldBe` "West Ham"
         Api.departureSeconds dp `shouldBe` 187
+
+      it "parses a single departure to hammersmith" $ do
+        resp <- readFixture "singledeparture_hammersmith.json"
+        let dp :: Api.Departure
+            dp = superUnsafeParse resp
+
+        Api.departureLine dp `shouldBe` "HammersmithAndCity"
+        Api.departureDestination dp `shouldBe` "Hammersmith"
+        Api.departureSeconds dp `shouldBe` 390
 
       it "fails to parse a departure without seconds" $ do
         resp <- readFixture "singledeparture_noseconds.json"
