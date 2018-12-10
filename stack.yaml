@@ -4,5 +4,4 @@ packages:
 - .
 extra-deps:
 - text-format-0.3.2
-- wreq-0.5.3.0
-resolver: nightly-2018-12-03
+resolver: lts-12.14
