@@ -93,7 +93,7 @@ extractDepartures = Aeson.withObject "departure" $ \o -> do
   _platformName <- PlatformName <$> o .: "platform_name"
   -- Manually parse individual list items so we can filter individual ones
   -- we cannot parse out without failing the entire parser.
-  departures <- catMaybes <$> fmap (Aeson.parseMaybe Aeson.parseJSON) <$> o .: "departures"
+  departures <- catMaybes . fmap (Aeson.parseMaybe Aeson.parseJSON) <$> o .: "departures"
   pure (directionName, departures)
 
 parseDepartures
