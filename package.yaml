@@ -1,7 +1,7 @@
 name:                tube-bot-fulfillment
 version:             0.1.11
-synopsis:            Simple project template from stack
-description:         Please see README.md
+synopsis:            Google Assistant Action for TfL Tube Departures
+description:         A Google Assistant Action to ask for upcoming Tube departures. Tell your Google Home to talk to Tube Trains to learn more.
 homepage:            https://github.com/passy/tube-bot-fulfillment#readme
 license:             BSD3
 author:              Pascal Hartig
