@@ -70,7 +70,7 @@ main = hspec $ do
               Response.direction $ Common.Spellbound
 
         let resp' = Response.runResponse (Response.mkCoResponse testConfig) resp
-        Common._speech resp' `shouldBe` "I found the following Eastbound departures from  London Bridge: Jubilee line to \"Stratford\" in less than a minute. Jubilee line to \"West Ham\" in 2 minutes. Jubilee line to \"Stratford\" in 4 minutes. I found the following Westbound departures from  London Bridge: Jubilee line to \"Stanmore\" in 1 minutes. Jubilee line to \"Stanmore\" in 3 minutes. Jubilee line to \"Willesden Green\" in 5 minutes."
+        Common._speech resp' `shouldBe` "I found the following Eastbound departures from  Aldgate East: District line to \"Upminster\" in 9 minutes. District line to \"Upminster\" in 10 minutes. District line to \"Upminster\" in 13 minutes. I found the following Westbound departures from  Aldgate East: Hammersmith And City line to \"Hammersmith\" in 6 minutes. District line to \"Ealing Broadway\" in 14 minutes. District line to \"Richmond\" in 16 minutes."
 
       it "parses a departure" $ do
         resp <- readFixture "singledeparture.json"

@@ -34,6 +34,9 @@ data Departure = Departure
   , departureSeconds :: Int
   } deriving (Show, Eq)
 
+newtype PlatformName = PlatformName Text
+  deriving (Show, Eq)
+
 instance Aeson.FromJSON Departure where
   parseJSON =
     Aeson.withObject "departure" $
@@ -85,6 +88,9 @@ parseDeparturesWith f r =
 extractDepartures :: Aeson.Value -> Aeson.Parser (Common.Direction, [Departure])
 extractDepartures = Aeson.withObject "departure" $ \o -> do
   directionName <- o .: "direction_name"
+  -- Currently unused but required to differentiate between scheduled and
+  -- live departure groupings.
+  _platformName <- PlatformName <$> o .: "platform_name"
   -- Manually parse individual list items so we can filter individual ones
   -- we cannot parse out without failing the entire parser.
   departures <- catMaybes <$> fmap (Aeson.parseMaybe Aeson.parseJSON) <$> o .: "departures"
