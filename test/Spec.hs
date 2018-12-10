@@ -63,6 +63,7 @@ main = hspec $ do
       it "provides a full response for aldgate east" $ do
         fixt <- readFixture "aldgateeast_departures.json"
         Just res <- return $ Api.parseDepartures fixt
+        length res `shouldBe` 5
         let resp = do
               Response.departures res
               Response.station $ Common.StationName "AldgateEast"
@@ -79,6 +80,15 @@ main = hspec $ do
         Api.departureLine dp `shouldBe` "District"
         Api.departureDestination dp `shouldBe` "West Ham"
         Api.departureSeconds dp `shouldBe` 187
+
+      it "parses a single departure to hammersmith" $ do
+        resp <- readFixture "singledeparture_hammersmith.json"
+        let dp :: Api.Departure
+            dp = superUnsafeParse resp
+
+        Api.departureLine dp `shouldBe` "HammersmithAndCity"
+        Api.departureDestination dp `shouldBe` "Hammersmith"
+        Api.departureSeconds dp `shouldBe` 390
 
       it "fails to parse a departure without seconds" $ do
         resp <- readFixture "singledeparture_noseconds.json"
