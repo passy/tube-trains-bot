@@ -57,6 +57,12 @@ docker build --rm -t passy/tube-bot-fulfillment:vx.y.z .
 docker push passy/tube-bot-fulfillment:vx.y.z
 ```
 
+Alternatively, if building statically through the provided container doesn't work
+(OOM errors or linking issues due to outdated upstream), you can build via
+`stack build --docker` after adding `ld-options: -static` to the executable section
+in `package.yaml`. If this turns out to be the overall more reliable way, I'll
+change the script accordingly.
+
 ## Deployment
 
 I use this [docker-compose](https://github.com/passy/tube-bot-fulfillment-deployment) config file
