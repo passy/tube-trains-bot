@@ -1,4 +1,4 @@
 {
-  port = 8001
-, maxDeparturesPerDirection = 3
+  port = +8001
+, maxDeparturesPerDirection = +3
 }
