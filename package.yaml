@@ -30,7 +30,7 @@ dependencies:
   - base >= 4.7 && < 5
   - aeson
   - bytestring
-  - dhall
+  - dhall >= 1.15 && < 1.16
   - digits
   - free
   - hashable
