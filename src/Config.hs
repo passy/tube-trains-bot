@@ -13,10 +13,11 @@ module Config
 
 import Protolude
 import qualified Dhall
+import Numeric.Natural (Natural)
 
 data Config = Config
-  { port :: Integer
-  , maxDeparturesPerDirection :: Integer
+  { port :: Natural
+  , maxDeparturesPerDirection :: Natural
   } deriving (Generic, Show, Dhall.Interpret)
 
 loadConfig :: IO Config
