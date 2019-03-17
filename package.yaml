@@ -62,6 +62,7 @@ executables:
     main:             Main.hs
     dependencies:
       - tube-bot-fulfillment
+    ld-options: -static
 
 tests:
   spec:
