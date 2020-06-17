@@ -191,7 +191,7 @@ filterDepartures c dir station' mline d =
   let d' = HMS.mapMaybe (maybe pure filterLine mline) d
   in
     Common.mkFulfillment $ case (null d', station', HMS.lookup dir d') of
-      (True, _, _) -> "I could not find any live departures departures for this station."
+      (True, _, _) -> "I could not find any live departures for this station."
       -- There was no station specified
       (False, Nothing, _) -> "I'm not sure which station to look for."
       -- We found departures for the specified direction.
